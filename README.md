@@ -1,8 +1,8 @@
-# Setu-js 🌉
+# Yantr-js 🪛
 
 > A "Shadcn for Backend" CLI that gives you **ownership** of production-ready Express.js code.
 
-[![npm version](https://img.shields.io/npm/v/setu-js.svg)](https://www.npmjs.com/package/setu-js)
+[![npm version](https://img.shields.io/npm/v/yantr-js.svg)](https://www.npmjs.com/package/yantr-js)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Philosophy
@@ -13,63 +13,63 @@
 
 ```bash
 # In your existing Express.js project
-npx setu-js init
+npx yantr-js init
 
 # Add components
-npx setu-js add auth
-npx setu-js add logger
-npx setu-js add database
-npx setu-js add security
+npx yantr-js add auth
+npx yantr-js add logger
+npx yantr-js add database
+npx yantr-js add security
 
 # Generate routes
-npx setu-js generate route users
-npx setu-js generate route products
+npx yantr-js generate route users
+npx yantr-js generate route products
 ```
 
 ## Installation
 
 ```bash
 # Using npm
-npm install -g setu-js
+npm install -g yantr-js
 
 # Using pnpm
-pnpm add -g setu-js
+pnpm add -g yantr-js
 
 # Using yarn
-yarn global add setu-js
+yarn global add yantr-js
 
 # Using bun
-bun add -g setu-js
+bun add -g yantr-js
 
 # Or run directly with npx
-npx setu-js <command>
+npx yantr-js <command>
 ```
 
 ## Commands
 
-### `setu init`
+### `yantr init`
 
-Initialize Setu in your project. Creates `setu.json` and base templates.
+Initialize Yantr in your project. Creates `yantr.json` and base templates.
 
 ```bash
-setu init          # Interactive mode
-setu init --yes    # Use defaults
+yantr init          # Interactive mode
+yantr init --yes    # Use defaults
 ```
 
 **Creates:**
-- `setu.json` - Configuration file
-- `lib/setu/error-handler.ts` - Global error handling
-- `lib/setu/zod-middleware.ts` - Request validation
+- `yantr.json` - Configuration file
+- `lib/yantr/error-handler.ts` - Global error handling
+- `lib/yantr/zod-middleware.ts` - Request validation
 
-### `setu add <component>`
+### `yantr add <component>`
 
 Add production-ready components to your project.
 
 ```bash
-setu add auth       # JWT authentication
-setu add logger     # Pino logging
-setu add database   # Prisma setup
-setu add security   # Rate limiting + Helmet
+yantr add auth       # JWT authentication
+yantr add logger     # Pino logging
+yantr add database   # Prisma setup
+yantr add security   # Rate limiting + Helmet
 ```
 
 | Component | Description | Dependencies |
@@ -79,14 +79,14 @@ setu add security   # Rate limiting + Helmet
 | `database` | Prisma ORM with singleton & utilities | @prisma/client |
 | `security` | Rate limiting + Helmet headers | helmet, express-rate-limit |
 
-### `setu generate route <name>`
+### `yantr generate route <name>`
 
 Scaffold a complete CRUD route with controller and service.
 
 ```bash
-setu generate route users
-setu generate route products
-setu g route orders  # 'g' is an alias
+yantr generate route users
+yantr generate route products
+yantr g route orders  # 'g' is an alias
 ```
 
 **Creates:**
@@ -96,13 +96,13 @@ setu g route orders  # 'g' is an alias
 
 ## Example Usage
 
-After running `setu init` and `setu add auth`:
+After running `yantr init` and `yantr add auth`:
 
 ```typescript
 // app.ts
 import express from 'express';
-import { errorHandler } from './lib/setu/error-handler';
-import authRoutes from './lib/setu/auth/auth.routes';
+import { errorHandler } from './lib/yantr/error-handler';
+import authRoutes from './lib/yantr/auth/auth.routes';
 
 const app = express();
 
@@ -115,7 +115,7 @@ app.listen(3000);
 
 ## Configuration
 
-`setu.json` stores your project configuration:
+`yantr.json` stores your project configuration:
 
 ```json
 {

@@ -16,23 +16,23 @@ export const SetuConfigSchema = z.object({
 
 export type SetuConfig = z.infer<typeof SetuConfigSchema>;
 
-const CONFIG_FILENAME = 'setu.json';
+const CONFIG_FILE = 'yantr.json';
 
 /**
- * Check if setu.json exists in the given directory
+ * Check if yantr.json exists in the given directory
  */
 export async function configExists(cwd: string): Promise<boolean> {
-  return fs.pathExists(path.join(cwd, CONFIG_FILENAME));
+  return fs.pathExists(path.join(cwd, CONFIG_FILE));
 }
 
 /**
- * Read and parse setu.json
+ * Read and parse yantr.json
  */
 export async function readConfig(cwd: string): Promise<SetuConfig> {
-  const configPath = path.join(cwd, CONFIG_FILENAME);
+  const configPath = path.join(cwd, CONFIG_FILE);
   
   if (!(await fs.pathExists(configPath))) {
-    throw new Error('setu.json not found. Run "setu init" first.');
+    throw new Error('yantr.json not found. Run "setu init" first.');
   }
 
   const content = await fs.readJson(configPath);
@@ -40,15 +40,15 @@ export async function readConfig(cwd: string): Promise<SetuConfig> {
 }
 
 /**
- * Write setu.json configuration
+ * Write yantr.json configuration
  */
 export async function writeConfig(cwd: string, config: SetuConfig): Promise<void> {
-  const configPath = path.join(cwd, CONFIG_FILENAME);
+  const configPath = path.join(cwd, CONFIG_FILE);
   await fs.writeJson(configPath, config, { spaces: 2 });
 }
 
 /**
- * Create initial setu.json configuration
+ * Create initial yantr.json configuration
  */
 export function createConfig(
   projectName: string,

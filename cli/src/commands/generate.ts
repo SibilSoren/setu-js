@@ -11,15 +11,15 @@ interface GenerateOptions {
 
 export async function generate(type: string, name: string, _options?: GenerateOptions) {
   console.clear();
-  p.intro(chalk.bgCyan.black(` 🌉 setu generate ${type} ${name} `));
+  p.intro(chalk.bgCyan.black(` 🪛 yantr generate ${type} ${name} `));
 
   try {
     const cwd = process.cwd();
 
-    // Step 1: Check if setu.json exists
+    // Step 1: Check if yantr.json exists
     if (!(await configExists(cwd))) {
-      p.log.error('setu.json not found.');
-      p.log.info('Please run ' + chalk.cyan('setu init') + ' first.');
+      p.log.error('yantr.json not found.');
+      p.log.info('Please run ' + chalk.cyan('yantr init') + ' first.');
       p.outro(chalk.red('Generate cancelled.'));
       process.exit(1);
     }
@@ -42,7 +42,7 @@ export async function generate(type: string, name: string, _options?: GenerateOp
       await generateRoute(cwd, config.srcDir, name);
     }
 
-    p.outro(chalk.green(`Generated ${type} "${name}" successfully! 🌉`));
+    p.outro(chalk.green(`Generated ${type} "${name}" successfully! 🪛`));
   } catch (error) {
     p.log.error(`Failed: ${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
@@ -198,8 +198,8 @@ function generateControllerTemplate(pascalName: string, camelName: string, norma
   return `import type { Request, Response } from 'express';
 import { z } from 'zod';
 import * as ${camelName}Service from '../services/${normalizedName}.service';
-import { asyncHandler } from '../lib/setu/error-handler';
-import { NotFoundError } from '../lib/setu/error-handler';
+import { asyncHandler } from '../lib/yantr/error-handler';
+import { NotFoundError } from '../lib/yantr/error-handler';
 
 /**
  * ${pascalName} Controller
@@ -300,7 +300,7 @@ export const remove = asyncHandler(async (req: Request, res: Response) => {
 function generateRouteTemplate(pascalName: string, camelName: string, normalizedName: string): string {
   return `import { Router } from 'express';
 import * as ${camelName}Controller from '../controllers/${normalizedName}.controller';
-import { validateBody } from '../lib/setu/zod-middleware';
+import { validateBody } from '../lib/yantr/zod-middleware';
 import { 
   create${pascalName}Schema, 
   update${pascalName}Schema 

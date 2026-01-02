@@ -21,15 +21,15 @@ interface AddOptions {
 
 export async function add(componentName: string, options: AddOptions) {
   console.clear();
-  p.intro(chalk.bgCyan.black(` 🌉 setu add ${componentName} `));
+  p.intro(chalk.bgCyan.black(` 🪛 yantr add ${componentName} `));
 
   try {
     const cwd = process.cwd();
 
   // Step 1: Check if setu.json exists
   if (!(await configExists(cwd))) {
-    p.log.error('setu.json not found.');
-    p.log.info('Please run ' + chalk.cyan('setu init') + ' first.');
+    p.log.error('yantr.json not found.');
+    p.log.info('Please run ' + chalk.cyan('yantr init') + ' first.');
     p.outro(chalk.red('Add cancelled.'));
     process.exit(1);
   }
@@ -86,7 +86,7 @@ export async function add(componentName: string, options: AddOptions) {
   spinner.start('Installing files...');
   
   const installedFiles: string[] = [];
-  const baseDir = path.join(cwd, config.srcDir, 'lib', 'setu');
+  const baseDir = path.join(cwd, config.srcDir, 'lib', 'yantr');
 
   for (const [filePath, content] of files) {
     // Extract just the filename from paths like "auth/auth.controller.ts"
@@ -166,19 +166,19 @@ export async function add(componentName: string, options: AddOptions) {
   // Component-specific usage hints
   const usageHints: Record<string, string[]> = {
     auth: [
-      `Import auth routes: ${chalk.gray(`import authRoutes from '${config.srcDir}/lib/setu/auth/auth.routes';`)}`,
+      `Import auth routes: ${chalk.gray(`import authRoutes from '${config.srcDir}/lib/yantr/auth/auth.routes';`)}`,
       `Add to app: ${chalk.gray('app.use("/api/auth", authRoutes);')}`,
     ],
     logger: [
-      `Import logger: ${chalk.gray(`import { logger } from '${config.srcDir}/lib/setu/logger/logger';`)}`,
+      `Import logger: ${chalk.gray(`import { logger } from '${config.srcDir}/lib/yantr/logger/logger';`)}`,
       `Use HTTP logging: ${chalk.gray('app.use(httpLogger);')}`,
     ],
     database: [
-      `Import prisma: ${chalk.gray(`import { prisma } from '${config.srcDir}/lib/setu/database/prisma';`)}`,
+      `Import prisma: ${chalk.gray(`import { prisma } from '${config.srcDir}/lib/yantr/database/prisma';`)}`,
       `Initialize: ${chalk.gray('npx prisma init')}`,
     ],
     security: [
-      `Import security: ${chalk.gray(`import { rateLimiter, helmetConfig } from '${config.srcDir}/lib/setu/security';`)}`,
+      `Import security: ${chalk.gray(`import { rateLimiter, helmetConfig } from '${config.srcDir}/lib/yantr/security';`)}`,
       `Add to app: ${chalk.gray('app.use(helmetConfig); app.use(rateLimiter);')}`,
     ],
   };

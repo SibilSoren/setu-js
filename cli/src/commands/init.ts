@@ -27,7 +27,7 @@ interface InitOptions {
 
 export async function init(options: InitOptions) {
   console.clear();
-  p.intro(chalk.bgCyan.black(' 🌉 setu init '));
+  p.intro(chalk.bgCyan.black(' 🪛 yantr init '));
 
   const cwd = process.cwd();
 
@@ -47,7 +47,7 @@ export async function init(options: InitOptions) {
   
   if (hasConfig && !options.yes) {
     const overwrite = await p.confirm({
-      message: 'setu.json already exists. Overwrite?',
+      message: 'yantr.json already exists. Overwrite?',
       initialValue: false,
     });
 
@@ -83,7 +83,7 @@ export async function init(options: InitOptions) {
           }),
         srcDir: () =>
           p.select({
-            message: 'Where should Setu put generated files?',
+            message: 'Where should Yantr put generated files?',
             initialValue: hasSrc ? './src' : '.',
             options: [
               { value: './src', label: './src (recommended)' },
@@ -123,12 +123,12 @@ export async function init(options: InitOptions) {
   const config = createConfig(projectName, srcDir, packageManager);
   await writeConfig(cwd, config);
   
-  spinner.stop('Created setu.json');
+  spinner.stop('Created yantr.json');
 
   // Step 5: Copy base templates
   spinner.start('Setting up base templates...');
 
-  const templatesDir = path.join(srcDir, 'lib', 'setu');
+  const templatesDir = path.join(srcDir, 'lib', 'yantr');
   await ensureDir(path.join(cwd, templatesDir));
 
   // Get the registry templates path (relative to the CLI package)
@@ -375,7 +375,7 @@ export { z };
 
   // Summary
   p.note(
-    `${chalk.green('✓')} setu.json created
+    `${chalk.green('✓')} yantr.json created
 ${chalk.green('✓')} ${templatesDir}/error-handler.ts
 ${chalk.green('✓')} ${templatesDir}/zod-middleware.ts`,
     'Files created'
@@ -385,8 +385,8 @@ ${chalk.green('✓')} ${templatesDir}/zod-middleware.ts`,
   p.log.step(1, `Add error handler to your Express app:`);
   console.log(chalk.gray(`   import { errorHandler } from '${templatesDir}/error-handler';`));
   console.log(chalk.gray(`   app.use(errorHandler);`));
-  p.log.step(2, `Add components: ${chalk.cyan('setu add auth')}`);
-  p.log.step(3, `Generate routes: ${chalk.cyan('setu generate route users')}`);
+  p.log.step(2, `Add components: ${chalk.cyan('yantr add auth')}`);
+  p.log.step(3, `Generate routes: ${chalk.cyan('yantr generate route users')}`);
 
-  p.outro(chalk.green('Setu initialized successfully! 🌉'));
+  p.outro(chalk.green('Yantr initialized successfully! 🪛'));
 }

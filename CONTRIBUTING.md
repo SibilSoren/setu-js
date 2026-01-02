@@ -1,12 +1,12 @@
-# Contributing to Setu-js
+# Contributing to Yantr-js
 
-Thank you for your interest in contributing to Setu-js! 🌉
+Thank you for your interest in contributing to Yantr-js! 🪛
 
 ## Development Setup
 
 1. **Fork and clone the repository**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/setu-js.git
+   git clone https://github.com/SibilSoren/setu-js.git
    cd setu-js
    ```
 
@@ -31,7 +31,7 @@ Thank you for your interest in contributing to Setu-js! 🌉
 ## Project Structure
 
 ```
-setu-js/
+yantr-js/
 ├── cli/                 # CLI package
 │   ├── src/            # TypeScript source
 │   └── registry/       # Component templates
@@ -62,7 +62,7 @@ setu-js/
 1. Add template files to `cli/registry/templates/<component>/`
 2. Update `cli/registry/registry.json` with component metadata
 3. Add usage hints in `cli/src/commands/add.ts`
-4. Test with `setu add <component>`
+4. Test with `yantr add <component>`
 
 ## Code Style
 

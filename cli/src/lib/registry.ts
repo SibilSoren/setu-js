@@ -29,7 +29,7 @@ export type Registry = z.infer<typeof RegistrySchema>;
 
 // Registry configuration
 const REGISTRY_URL = 'https://raw.githubusercontent.com/SibilSoren/setu-js/main/cli/registry/registry.json';
-const CACHE_DIR = '.setu-cache';
+const CACHE_DIR = '.yantr-cache';
 const CACHE_TTL_MS = 1000 * 60 * 60; // 1 hour
 
 /**
