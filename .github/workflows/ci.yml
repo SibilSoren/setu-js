@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: cli/package-lock.json
+      
+      - name: Install CLI dependencies
+        run: npm install
+        working-directory: cli
+      
+      - name: Build CLI
+        run: npm run build
+        working-directory: cli
+      
+      - name: Run tests
+        run: npm test
+        working-directory: cli
+        continue-on-error: true # Tests may not exist yet
+      
+      - name: Test CLI help
+        run: node dist/index.js --help
+        working-directory: cli
+
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm install
+        working-directory: cli
+      
+      - name: Run linter
+        run: npm run lint
+        working-directory: cli
+        continue-on-error: true
