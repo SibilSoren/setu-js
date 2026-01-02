@@ -34,7 +34,7 @@
     "start": "node dist/index.js",
     "lint": "eslint src/",
     "test": "vitest",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@clack/prompts": "^0.7.0",
