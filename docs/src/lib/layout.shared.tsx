@@ -1,9 +1,28 @@
 import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import Image from 'next/image';
 
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title: 'Yantr-js 🪛',
+      title: (
+        <>
+          <Image 
+            src="/logo.png" 
+            alt="YantrJS" 
+            width={32} 
+            height={32}
+            className="rounded"
+          />
+          <span className="font-bold text-lg">YantrJS</span>
+        </>
+      ),
     },
+    links: [
+      {
+        text: 'GitHub',
+        url: 'https://github.com/SibilSoren/yantr-js',
+        external: true,
+      },
+    ],
   };
 }

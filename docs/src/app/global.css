@@ -1,3 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+/* Apply Montserrat font globally */
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ===================================
+   Yantr-js Custom Branded Theme
+   Colors extracted from the owl logo:
+   - Navy Blue: #1a2744 (primary dark)
+   - Bright Blue: #4a9eff (accent/eyes)
+   - Coral Red: #e74c3c (secondary accent)
+   =================================== */
+
+@layer base {
+  :root {
+    /* Brand color utilities */
+    --yantr-navy: #1a2744;
+    --yantr-blue: #4a9eff;
+    --yantr-coral: #e74c3c;
+    --yantr-silver: #9ca3af;
+  }
+}
+
+@layer components {
+  /* Feature card styling */
+  .feature-card {
+    background: var(--fd-card);
+    border: 1px solid var(--fd-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  .feature-card:hover {
+    border-color: var(--yantr-blue);
+    box-shadow: 0 8px 32px rgba(74, 158, 255, 0.1);
+    transform: translateY(-4px);
+  }
+
+  /* Primary button */
+  .btn-primary {
+    background: var(--yantr-blue);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: #3b82f6;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    background: var(--fd-muted);
+    color: var(--fd-foreground);
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 1px solid var(--fd-border);
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    background: var(--fd-border);
+    transform: translateY(-1px);
+  }
+
+  /* Hero section background */
+  .hero-bg {
+    background: var(--yantr-navy);
+    position: relative;
+  }
+
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(74, 158, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(231, 76, 60, 0.1) 0%, transparent 40%);
+    pointer-events: none;
+  }
+
+  /* Logo glow effect */
+  .logo-glow {
+    filter: drop-shadow(0 0 20px rgba(74, 158, 255, 0.4));
+  }
+
+  /* Terminal-style code preview */
+  .terminal-preview {
+    background: #0f172a;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #334155;
+  }
+
+  .terminal-header {
+    background: #1e293b;
+    padding: 0.75rem 1rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .terminal-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .terminal-dot-red { background: #ef4444; }
+  .terminal-dot-yellow { background: #eab308; }
+  .terminal-dot-green { background: #22c55e; }
+
+  .terminal-body {
+    padding: 1.5rem;
+    font-family: ui-monospace, monospace;
+    color: #e2e8f0;
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+}
