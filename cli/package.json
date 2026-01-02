@@ -1,12 +1,12 @@
 {
-  "name": "setu-js",
+  "name": "yantr-js",
   "version": "0.1.0-beta.2",
   "description": "A Shadcn for Backend - Production-grade backend scaffolding CLI for Express.js",
   "author": "SibilSoren",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "setu": "./dist/index.js"
+    "yantr": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "files": [

@@ -6,9 +6,9 @@ import { generate } from './commands/generate.js';
 const program = new Command();
 
 program
-  .name('setu')
-  .description('🌉 Setu-js: Production-grade backend scaffolding CLI for Express.js')
-  .version('0.1.0');
+  .name('yantr')
+  .description('A Shadcn for Backend - Production-grade backend scaffolding CLI')
+  .version('0.1.0-beta.2');
 
 program
   .command('init')
