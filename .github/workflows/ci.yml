@@ -13,29 +13,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: cli/package-lock.json
+          cache: 'pnpm'
       
-      - name: Install CLI dependencies
-        run: npm install
-        working-directory: cli
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
       
       - name: Build CLI
-        run: npm run build
-        working-directory: cli
+        run: pnpm --filter cli build
       
       - name: Run tests
-        run: npm test
-        working-directory: cli
-        continue-on-error: true # Tests may not exist yet
+        run: pnpm --filter cli test
+        continue-on-error: true
       
       - name: Test CLI help
-        run: node dist/index.js --help
-        working-directory: cli
+        run: node cli/dist/index.js --help
 
   lint:
     runs-on: ubuntu-latest
@@ -43,18 +43,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: cli/package-lock.json
+          cache: 'pnpm'
       
       - name: Install dependencies
-        run: npm install
-        working-directory: cli
+        run: pnpm install --no-frozen-lockfile
       
       - name: Run linter
-        run: npm run lint
-        working-directory: cli
+        run: pnpm --filter cli lint
         continue-on-error: true
