@@ -9,39 +9,28 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write  # Required for npm provenance
+      id-token: write
     
     steps:
       - uses: actions/checkout@v4
       
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+          
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
       
       - name: Install dependencies
-        run: npm install
-        working-directory: cli
+        run: pnpm install --no-frozen-lockfile
       
       - name: Build
-        run: npm run build
-        working-directory: cli
+        run: pnpm --filter cli build
       
-      # Option 1: Using NPM_TOKEN (granular token)
-      # Create token via: npm token create
-      # Add as NPM_TOKEN secret in GitHub
       - name: Publish to npm
-        run: npm publish --access public --provenance
-        working-directory: cli
+        run: pnpm --filter cli publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      
-      # Option 2: OIDC Trusted Publishing (no token needed)
-      # Uncomment below and comment out Option 1 after setting up:
-      # 1. Go to npmjs.com/settings/~/tokens
-      # 2. Enable "Trusted Publishing" for your package
-      # 3. Link your GitHub repo
-      # - name: Publish to npm (OIDC)
-      #   run: npm publish --access public --provenance
-      #   working-directory: cli

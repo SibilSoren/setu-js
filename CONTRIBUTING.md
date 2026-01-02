@@ -6,8 +6,8 @@ Thank you for your interest in contributing to Yantr-js! 🪛
 
 1. **Fork and clone the repository**
    ```bash
-   git clone https://github.com/SibilSoren/setu-js.git
-   cd setu-js
+   git clone https://github.com/SibilSoren/yantr-js.git
+   cd yantr-js
    ```
 
 2. **Install dependencies**

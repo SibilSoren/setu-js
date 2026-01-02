@@ -1,0 +1,51 @@
+---
+title: Security
+description: Protecting your Express app.
+---
+
+# Security 🛡️
+
+The `security` component adds essential protection to your Express application using **Helmet.js** for secure headers and **express-rate-limit** for basic DDoS protection.
+
+## Installation
+
+```bash
+yantr add security
+```
+
+## Included Files
+
+- `lib/yantr/security/helmet.ts`: Helmet configuration with production defaults.
+- `lib/yantr/security/rate-limiter.ts`: Rate limiting configurations.
+
+## Usage
+
+### Secure Headers (Helmet)
+
+```typescript
+import { getHelmetConfig } from './lib/yantr/security/helmet';
+
+app.use(getHelmetConfig());
+```
+
+### Rate Limiting
+
+Apply globally or to specific routes:
+
+```typescript
+import { rateLimiter, authRateLimiter } from './lib/yantr/security/rate-limiter';
+
+// Global rate limiting
+app.use(rateLimiter);
+
+// Strict rate limiting for auth routes
+app.use('/api/auth', authRateLimiter);
+```
+
+## Features
+
+- **Helmet**: Sets secure headers (CSP, HSTS, XSS Protection, etc.) with relaxed settings in development.
+- **Rate Limit**:
+  - `rateLimiter`: Default (100 requests per 15 minutes).
+  - `authRateLimiter`: Stricter (5 attempts per 15 minutes).
+  - `apiRateLimiter`: General API (60 requests per minute).

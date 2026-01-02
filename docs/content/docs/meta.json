@@ -1,0 +1,13 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "index",
+    "quickstart",
+    "commands",
+    "---Components---",
+    "components/auth",
+    "components/logger",
+    "components/database",
+    "components/security"
+  ]
+}

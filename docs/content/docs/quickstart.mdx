@@ -1,0 +1,87 @@
+---
+title: Quickstart
+description: Get started with Yantr-js in 3 minutes.
+---
+
+# Quickstart 🚀
+
+Learn how to go from a blank Express project to a production-ready API with authentication and logging in just a few minutes.
+
+## 1. Installation
+
+You can run Yantr-js directly using `npx`:
+
+```bash
+npx yantr-js init
+```
+
+Or install it globally:
+
+```bash
+npm install -g yantr-js
+```
+
+## 2. Initialize your Project
+
+Run the `init` command in the root of your Express.js project.
+
+```bash
+yantr init
+```
+
+Yantr-js will ask you a few questions about your project structure. Once finished, it will create:
+- `yantr.json`: Your project configuration.
+- `src/lib/yantr/error-handler.ts`: A robust global error handler.
+- `src/lib/yantr/zod-middleware.ts`: Middleware for request validation.
+
+## 3. Add Components
+
+Let's add Authentication and Logging to your project:
+
+```bash
+yantr add auth
+yantr add logger
+```
+
+This will download the necessary source files into your `src/lib/yantr` folder and install the required dependencies (like `pino`, `jsonwebtoken`, and `bcryptjs`).
+
+## 4. Generate a Route
+
+Now, let's scaffold a new API resource:
+
+```bash
+yantr generate route users
+```
+
+This creates three files:
+1. `src/routes/users.routes.ts`
+2. `src/controllers/users.controller.ts`
+3. `src/services/users.service.ts`
+
+## 5. Wire it up
+
+Import your new components into your Express `app.ts` (or `index.ts`):
+
+```typescript
+import express from 'express';
+import { errorHandler } from './lib/yantr/error-handler';
+import { httpLogger } from './lib/yantr/logger/http-logger';
+import usersRoutes from './routes/users.routes';
+
+const app = express();
+
+app.use(express.json());
+app.use(httpLogger);
+
+// Your routes
+app.use('/api/users', usersRoutes);
+
+// Global Error Handler (Must be last)
+app.use(errorHandler);
+
+app.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});
+```
+
+That's it! You now have a production-ready foundation that you fully own. 🪛

@@ -1,0 +1,49 @@
+---
+title: Logging
+description: Structured logging with Pino.
+---
+
+# Logging 🪵
+
+The `logger` component provides high-performance, structured logging using **Pino**. It is pre-configured for human-readable output in development and efficient JSON output in production.
+
+## Installation
+
+```bash
+yantr add logger
+```
+
+## Included Files
+
+- `lib/yantr/logger/logger.ts`: The core Pino logger instance.
+- `lib/yantr/logger/http-logger.ts`: Middleware for HTTP request logging.
+
+## Usage
+
+### Middleware Logging
+
+Add the `httpLogger` to your global Express middleware:
+
+```typescript
+import { httpLogger } from './lib/yantr/logger/http-logger';
+
+app.use(httpLogger);
+```
+
+This will log every incoming request with its status code, method, and response time.
+
+### Custom Logging
+
+Import the `logger` anywhere in your application:
+
+```typescript
+import { logger } from './lib/yantr/logger/logger';
+
+logger.info({ userId: '123' }, 'User action completed');
+logger.error(error, 'An unexpected error occurred');
+```
+
+## Environments
+
+- **Development**: Pretty-printed with colors (requires `pino-pretty`).
+- **Production**: Optimized JSON format, ideal for log aggregation services (ELK, Datadog, etc.).

@@ -1,0 +1,53 @@
+---
+title: Authentication
+description: Secure JWT authentication component.
+---
+
+# Authentication 🔐
+
+The `auth` component provides a complete JWT-based authentication system with support for refresh tokens and role-based access control.
+
+## Installation
+
+```bash
+yantr add auth
+```
+
+## Included Files
+
+- `lib/yantr/auth/auth.middleware.ts`: JWT verification and role checking.
+- `lib/yantr/auth/auth.service.ts`: Password hashing and token generation.
+- `lib/yantr/auth/auth.controller.ts`: Route handlers for register, login, etc.
+- `lib/yantr/auth/auth.routes.ts`: Express router setup.
+
+## Usage
+
+After installing, mount the routes in your Express app:
+
+```typescript
+import authRoutes from './lib/yantr/auth/auth.routes';
+
+app.use('/api/auth', authRoutes);
+```
+
+### Protecting Routes
+
+Use the provided middleware to protect your endpoints:
+
+```typescript
+import { authenticate } from './lib/yantr/auth/auth.middleware';
+
+router.get('/profile', authenticate, (req, res) => {
+  res.json(req.user);
+});
+```
+
+### Role-Based Access
+
+```typescript
+import { authorize } from './lib/yantr/auth/auth.middleware';
+
+router.delete('/users', authenticate, authorize(['ADMIN']), (req, res) => {
+  // Only admins can delete users
+});
+```

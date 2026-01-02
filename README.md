@@ -119,8 +119,8 @@ app.listen(3000);
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/SibilSoren/setu-js/main/cli/schema.json",
-  "projectName": "my-api",
+  "$schema": "https://raw.githubusercontent.com/SibilSoren/yantr-js/main/cli/schema.json",
+  "projectName": "my-yantr-api",
   "srcDir": "./src",
   "packageManager": "pnpm",
   "installedComponents": ["base", "auth"]
@@ -129,7 +129,7 @@ app.listen(3000);
 
 ## Package Manager Support
 
-Setu-js automatically detects and uses your preferred package manager:
+Yantr-js automatically detects and uses your preferred package manager:
 - npm
 - pnpm
 - yarn
@@ -141,8 +141,8 @@ Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
-MIT © [SibilSoren](https://github.com/SibilSoren)
+MIT © [SibilSoren](https://github.com/SibilSoren/yantr-js)
 
 ---
 
-Built with ❤️ by the Setu-js community
+Built with ❤️ by the Yantr-js community

@@ -1,0 +1,85 @@
+---
+title: CLI Commands
+description: Detailed reference for the Yantr-js CLI commands.
+---
+
+# CLI Commands 🪛
+
+Yantr-js provides three primary commands to manage your project.
+
+---
+
+## `yantr init`
+
+Initializes Yantr-js in an existing Express.js project.
+
+### Usage
+
+```bash
+yantr init [options]
+```
+
+### Options
+
+- `--yes`: Use default settings for all prompts.
+- `--srcDir <path>`: Specify the source directory manually (e.g., `./src`).
+
+### What it does
+
+1.  **Detects Environment**: Identifies your project name, source directory, and preferred package manager.
+2.  **Creates Config**: Generates a `yantr.json` file to track installed components and project settings.
+3.  **Sets up Base Templates**: Injects `error-handler.ts` and `zod-middleware.ts` into your `lib/yantr` folder.
+4.  **Installs Dependencies**: Automatically installs `zod`.
+
+---
+
+## `yantr add`
+
+Downloads a component from the Yantr registry and installs its dependencies.
+
+### Usage
+
+```bash
+yantr add <component> [options]
+```
+
+### Options
+
+- `--overwrite`: Overwrite existing files if the component is already installed.
+
+### Available Components
+
+- `auth`: Full JWT authentication system.
+- `logger`: Pino-based structured logging system.
+- `database`: Prisma ORM configuration and utilities.
+- `security`: Security headers and rate limiting.
+
+### What it does
+
+1.  **Fetches Metadata**: Downloads component info from the registry.
+2.  **Downloads Templates**: Fetches the latest `.ts` templates for the component.
+3.  **Installs Dependencies**: Reads the component's requirements and installs them using your detected package manager.
+4.  **Updates Config**: Adds the component to `installedComponents` in `yantr.json`.
+
+---
+
+## `yantr generate` (Alias: `g`)
+
+Scaffolds code for common application patterns.
+
+### Usage
+
+```bash
+yantr generate <type> <name>
+```
+
+### Supported Types
+
+- `route`: Generates a standard Express CRUD pattern.
+
+### What it does (for `route`)
+
+1.  **Normalizes Names**: Converts your input (e.g., `userProfile`) into consistent `kebab-case` for files and `PascalCase` for types.
+2.  **Creates Service**: Generates business logic boilerplate in `services/`.
+3.  **Creates Controller**: Generates request handlers and Zod validation schemas in `controllers/`.
+4.  **Creates Route**: Connects the controller to an Express router in `routes/`.

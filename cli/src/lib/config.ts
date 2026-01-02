@@ -1,17 +1,17 @@
+import { z } from 'zod';
 import fs from 'fs-extra';
 import path from 'path';
-import { z } from 'zod';
 import type { PackageManager } from './installer.js';
 
 /**
- * Schema for setu.json configuration file
+ * Schema for yantr.json configuration file
  */
 export const SetuConfigSchema = z.object({
   $schema: z.string().optional(),
   projectName: z.string(),
-  srcDir: z.string().default('./src'),
-  packageManager: z.enum(['npm', 'pnpm', 'yarn', 'bun']),
-  installedComponents: z.array(z.string()).default([]),
+  srcDir: z.string(),
+  packageManager: z.enum(['npm', 'pnpm', 'yarn', 'bun'] as [PackageManager, ...PackageManager[]]),
+  installedComponents: z.array(z.string()),
 });
 
 export type SetuConfig = z.infer<typeof SetuConfigSchema>;
@@ -32,7 +32,7 @@ export async function readConfig(cwd: string): Promise<SetuConfig> {
   const configPath = path.join(cwd, CONFIG_FILE);
   
   if (!(await fs.pathExists(configPath))) {
-    throw new Error('yantr.json not found. Run "setu init" first.');
+    throw new Error('yantr.json not found. Run "yantr init" first.');
   }
 
   const content = await fs.readJson(configPath);
@@ -56,30 +56,10 @@ export function createConfig(
   packageManager: PackageManager
 ): SetuConfig {
   return {
-    $schema: 'https://raw.githubusercontent.com/SibilSoren/setu-js/main/cli/schema.json',
+    $schema: 'https://raw.githubusercontent.com/SibilSoren/yantr-js/main/cli/schema.json',
     projectName,
     srcDir,
     packageManager,
-    installedComponents: [],
+    installedComponents: ['base'],
   };
-}
-
-/**
- * Add a component to the installed list
- */
-export async function addInstalledComponent(cwd: string, component: string): Promise<void> {
-  const config = await readConfig(cwd);
-  
-  if (!config.installedComponents.includes(component)) {
-    config.installedComponents.push(component);
-    await writeConfig(cwd, config);
-  }
-}
-
-/**
- * Check if a component is already installed
- */
-export async function isComponentInstalled(cwd: string, component: string): Promise<boolean> {
-  const config = await readConfig(cwd);
-  return config.installedComponents.includes(component);
 }

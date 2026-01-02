@@ -1,0 +1,68 @@
+---
+title: Database
+description: Prisma ORM setup and utilities.
+---
+
+# Database 🗄️
+
+The `database` component integrates **Prisma ORM** with a singleton pattern and provides helpful utilities like transactions and pagination.
+
+## Installation
+
+```bash
+yantr add database
+```
+
+## Included Files
+
+- `lib/yantr/database/prisma.ts`: Prisma Client singleton with connection management.
+- `lib/yantr/database/db.ts`: Extension utilities (transactions, pagination).
+
+## Usage
+
+### Prisma Client Singleton
+
+Import the `prisma` instance directly:
+
+```typescript
+import { prisma } from './lib/yantr/database/prisma';
+
+const users = await prisma.user.findMany();
+```
+
+### Transactions
+
+Use the `withTransaction` helper to ensure atomic operations:
+
+```typescript
+import { withTransaction } from './lib/yantr/database/db';
+
+const result = await withTransaction(async (tx) => {
+  const user = await tx.user.create({ data: { ... } });
+  await tx.profile.create({ data: { userId: user.id, ... } });
+  return user;
+});
+```
+
+### Pagination
+
+```typescript
+import { getPaginationParams, formatPaginatedResponse } from './lib/yantr/database/db';
+
+const { skip, take, page, limit } = getPaginationParams({ page: 1, limit: 10 });
+
+const [total, data] = await Promise.all([
+  prisma.user.count(),
+  prisma.user.findMany({ skip, take })
+]);
+
+const paginated = formatPaginatedResponse(data, total, page, limit);
+```
+
+### Health Check
+
+```typescript
+import { checkDbConnection } from './lib/yantr/database/prisma';
+
+const isAlive = await checkDbConnection();
+```

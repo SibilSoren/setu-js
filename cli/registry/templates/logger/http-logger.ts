@@ -12,7 +12,7 @@ import { logger } from './logger';
  * @example
  * ```typescript
  * import express from 'express';
- * import { httpLogger } from './lib/setu/logger/http-logger';
+ * import { httpLogger } from './lib/yantr/logger/http-logger';
  * 
  * const app = express();
  * app.use(httpLogger);

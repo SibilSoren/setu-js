@@ -1,13 +1,35 @@
 ---
-title: Hello World
-description: Your first document
+title: Introduction
+description: Why Yantr-js?
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+# Introduction 🪛
 
-## What is Next?
+Welcome to **Yantr-js**, a "Shadcn for Backend" CLI designed to accelerate your Express.js development without sacrificing ownership.
 
-<Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
-</Cards>
+## The Philosophy: Ownership over Abstraction
+
+Most backend scaffolders hide their logic behind complex dependencies or high-level abstractions. When you need to customize a core behavior (like how JWTs are handled), you find yourself fighting the framework.
+
+**Yantr-js takes a different approach.**
+
+Instead of being a dependency, Yantr-js is a **code orchestrator**. It injects high-quality, production-ready TypeScript code directly into your project.
+
+### Key Principles
+
+- **Ownership**: The code is yours. Once it's in your `lib/yantr` folder, you own it. Change it, delete it, or extend it.
+- **Zero Bloat**: Only the code you need is added. No massive "base" dependencies that you never use.
+- **Type Safety**: Built from the ground up with TypeScript and Zod for robust, self-documenting code.
+- **Production-Ready**: Patterns we've battle-tested in real production environments (Pino logging, Prisma singletons, Helmet security).
+
+## How it Works
+
+1. **`yantr init`**: Prepares your project with a configuration file and base utilities (like global error handling).
+2. **`yantr add`**: Fetches specific components (Auth, DB, etc.) from our registry and places them in your project.
+3. **`yantr generate`**: Scaffolds repetitive patterns like Routes, Controllers, and Services.
+
+## Why "Yantr"?
+
+"Yantr" (यन्त्र) is the Sanskrit word for **Instrument** or **Machine**. We believe that while AI and automation can build the machine, the developer should always be the one holding the instruments.
+
+Ready to build something? Let's get started with the [Quickstart](/docs/quickstart).
