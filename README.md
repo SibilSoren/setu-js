@@ -141,7 +141,7 @@ Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
-MIT © [SibilSoren](https://github.com/SibilSoren)
+MIT © [SibilSoren](https://github.com/SibilSoren/yantr-js)
 
 ---
 

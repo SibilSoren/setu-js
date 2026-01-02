@@ -18,7 +18,7 @@ export default function HomePage() {
           Get Started
         </Link>
         <Link 
-          href="https://github.com/SibilSoren/setu-js" 
+          href="https://github.com/SibilSoren/yantr-js" 
           target="_blank"
           className="bg-muted text-muted-foreground px-8 py-3 rounded-md font-medium text-lg hover:bg-muted/80 transition-colors"
         >
