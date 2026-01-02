@@ -1,0 +1,58 @@
+{
+  "version": "1.0.0",
+  "baseUrl": "https://raw.githubusercontent.com/SibilSoren/setu-js/main/cli/registry/templates",
+  "components": {
+    "base": {
+      "name": "Base",
+      "description": "Global error handler and Zod validation middleware",
+      "files": [
+        "base/error-handler.ts",
+        "base/zod-middleware.ts"
+      ],
+      "dependencies": ["zod"],
+      "devDependencies": []
+    },
+    "auth": {
+      "name": "Authentication",
+      "description": "JWT authentication with refresh tokens and cookie support",
+      "files": [
+        "auth/auth.controller.ts",
+        "auth/auth.service.ts",
+        "auth/auth.middleware.ts",
+        "auth/auth.routes.ts"
+      ],
+      "dependencies": ["jsonwebtoken", "bcryptjs", "cookie-parser"],
+      "devDependencies": ["@types/jsonwebtoken", "@types/bcryptjs", "@types/cookie-parser"]
+    },
+    "logger": {
+      "name": "Logger",
+      "description": "Structured logging with Pino",
+      "files": [
+        "logger/logger.ts",
+        "logger/http-logger.ts"
+      ],
+      "dependencies": ["pino", "pino-http", "pino-pretty"],
+      "devDependencies": []
+    },
+    "database": {
+      "name": "Database",
+      "description": "Prisma ORM setup with connection pooling",
+      "files": [
+        "database/prisma.ts",
+        "database/db.ts"
+      ],
+      "dependencies": ["@prisma/client"],
+      "devDependencies": ["prisma"]
+    },
+    "security": {
+      "name": "Security",
+      "description": "Rate limiting with Helmet security headers",
+      "files": [
+        "security/rate-limiter.ts",
+        "security/helmet.ts"
+      ],
+      "dependencies": ["helmet", "express-rate-limit"],
+      "devDependencies": ["@types/express-rate-limit"]
+    }
+  }
+}
