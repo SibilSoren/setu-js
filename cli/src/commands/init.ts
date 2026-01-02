@@ -19,7 +19,6 @@ import {
   writeFile,
   ensureDir
 } from '../utils/fs.js';
-import logger from '../utils/logger.js';
 
 interface InitOptions {
   yes?: boolean;
@@ -42,7 +41,7 @@ export async function init(options: InitOptions) {
     process.exit(1);
   }
 
-  // Step 2: Check if setu.json already exists
+  // Step 2: Check if yantr.json already exists
   const hasConfig = await configExists(cwd);
   
   if (hasConfig && !options.yes) {
@@ -76,10 +75,12 @@ export async function init(options: InitOptions) {
     const responses = await p.group(
       {
         projectName: () =>
-          p.text({
-            message: 'Project name:',
-            defaultValue: detectedName,
-            placeholder: detectedName,
+          p.group({
+             name: () => p.text({
+                message: 'Project name:',
+                defaultValue: detectedName,
+                placeholder: detectedName,
+              })
           }),
         srcDir: () =>
           p.select({
@@ -111,12 +112,12 @@ export async function init(options: InitOptions) {
       }
     );
 
-    projectName = responses.projectName as string;
+    projectName = (responses.projectName as any).name as string;
     srcDir = responses.srcDir as string;
     packageManager = responses.packageManager as PackageManager;
   }
 
-  // Step 4: Create setu.json
+  // Step 4: Create yantr.json
   const spinner = p.spinner();
   spinner.start('Creating configuration...');
 
@@ -131,18 +132,10 @@ export async function init(options: InitOptions) {
   const templatesDir = path.join(srcDir, 'lib', 'yantr');
   await ensureDir(path.join(cwd, templatesDir));
 
-  // Get the registry templates path (relative to the CLI package)
+  // Registry templates path
   const cliDir = path.dirname(new URL(import.meta.url).pathname);
-  const registryPath = path.join(cliDir, '..', '..', 'registry', 'templates', 'base');
-
-  // Check if running from source or built version
-  const baseTemplatesPath = await fs.pathExists(registryPath)
-    ? registryPath
-    : path.join(cliDir, 'registry', 'templates', 'base');
-
-  // For now, we'll create the files inline since registry fetching comes in Phase 3
-  // This will be replaced with actual registry fetching later
-
+  
+  // Base templates
   const errorHandlerContent = `import type { Request, Response, NextFunction } from 'express';
 
 /**
@@ -318,7 +311,7 @@ export function validate(schemas: ValidateOptions) {
           const errors = formatZodErrors(result.error);
 
           for (const [key, messages] of Object.entries(errors)) {
-            const prefixedKey = \`\${location}.\${key}\`;
+            const prefixedKey = \\\`\\\${location}.\\\${key}\\\`;
             allErrors[prefixedKey] = messages;
           }
         } else {
@@ -362,7 +355,7 @@ export { z };
 
   spinner.stop('Base templates created');
 
-  // Step 6: Install zod dependency
+  // Step 6: Install dependencies
   spinner.start('Installing dependencies...');
 
   try {
@@ -370,23 +363,23 @@ export { z };
     spinner.stop('Dependencies installed');
   } catch (error) {
     spinner.stop('Could not install dependencies automatically');
-    p.log.warning(`Please run: ${chalk.cyan(`${packageManager} add zod`)}`);
+    p.log.warning(`Please run: \${chalk.cyan(\`\${packageManager} add zod\`)}`);
   }
 
   // Summary
   p.note(
-    `${chalk.green('✓')} yantr.json created
-${chalk.green('✓')} ${templatesDir}/error-handler.ts
-${chalk.green('✓')} ${templatesDir}/zod-middleware.ts`,
+    \`\${chalk.green('✓')} yantr.json created
+\${chalk.green('✓')} \${templatesDir}/error-handler.ts
+\${chalk.green('✓')} \${templatesDir}/zod-middleware.ts\`,
     'Files created'
   );
 
   p.log.info('Next steps:');
-  p.log.step(1, `Add error handler to your Express app:`);
-  console.log(chalk.gray(`   import { errorHandler } from '${templatesDir}/error-handler';`));
-  console.log(chalk.gray(`   app.use(errorHandler);`));
-  p.log.step(2, `Add components: ${chalk.cyan('yantr add auth')}`);
-  p.log.step(3, `Generate routes: ${chalk.cyan('yantr generate route users')}`);
+  p.log.step(1, \`Add error handler to your Express app:\`);
+  console.log(chalk.gray(\`   import { errorHandler } from '\${templatesDir}/error-handler';\`));
+  console.log(chalk.gray(\`   app.use(errorHandler);\`));
+  p.log.step(2, \`Add components: \${chalk.cyan('yantr add auth')}\`);
+  p.log.step(3, \`Generate routes: \${chalk.cyan('yantr generate route users')}\`);
 
   p.outro(chalk.green('Yantr initialized successfully! 🪛'));
 }

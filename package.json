@@ -2,12 +2,13 @@
   "name": "yantr-js-monorepo",
   "version": "0.1.0",
   "private": true,
-  "description": "A Shadcn for Backend - Production-grade backend scaffolding CLI",
+  "description": "A Shadcn for Backend - Production-grade Yantr-js backend scaffolding CLI",
   "author": "SibilSoren",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SibilSoren/setu-js.git"
+    "url": "https://github.com/SibilSoren/setu-js.git",
+    "baseUrl": "https://raw.githubusercontent.com/SibilSoren/setu-js/main/cli/registry/templates"
   },
   "scripts": {
     "dev:cli": "pnpm --filter cli dev",

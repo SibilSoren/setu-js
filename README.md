@@ -120,7 +120,7 @@ app.listen(3000);
 ```json
 {
   "$schema": "https://raw.githubusercontent.com/SibilSoren/yantr-js/main/cli/schema.json",
-  "projectName": "my-api",
+  "projectName": "my-yantr-api",
   "srcDir": "./src",
   "packageManager": "pnpm",
   "installedComponents": ["base", "auth"]
