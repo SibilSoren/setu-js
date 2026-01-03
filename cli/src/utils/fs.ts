@@ -65,3 +65,28 @@ export async function getProjectName(cwd: string): Promise<string | null> {
 export async function hasSrcDirectory(cwd: string): Promise<boolean> {
   return fs.pathExists(path.join(cwd, 'src'));
 }
+
+/**
+ * Create a minimal package.json for a new project
+ */
+export async function createPackageJson(cwd: string, name: string): Promise<void> {
+  const packageJson = {
+    name: name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+    version: '1.0.0',
+    description: '',
+    main: 'index.js',
+    scripts: {
+      dev: 'ts-node src/index.ts',
+      build: 'tsc',
+      start: 'node dist/index.js',
+    },
+    keywords: [],
+    author: '',
+    license: 'ISC',
+  };
+
+  await writeFile(
+    path.join(cwd, 'package.json'),
+    JSON.stringify(packageJson, null, 2)
+  );
+}
