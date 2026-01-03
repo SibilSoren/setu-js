@@ -21,11 +21,9 @@
         ]
       },
       "dependencies": {
-        "common": ["zod"],
-        "hono": []
+        "common": ["zod"]
       },
       "devDependencies": {
-        "common": [],
         "express": ["@types/express"]
       }
     },
@@ -67,14 +65,38 @@
     },
     "database": {
       "name": "Database",
-      "description": "Prisma ORM setup with connection pooling",
+      "description": "Database connection and ORM setup",
       "frameworkSpecific": false,
-      "files": [
-        "shared/database/prisma.ts",
-        "shared/database/db.ts"
-      ],
-      "dependencies": ["@prisma/client"],
-      "devDependencies": ["prisma"]
+      "requiresSelection": true,
+      "variants": {
+        "postgres-prisma": {
+          "label": "PostgreSQL + Prisma",
+          "files": [
+            "shared/database/prisma/client.ts",
+            "shared/database/prisma/db.ts"
+          ],
+          "dependencies": ["@prisma/client"],
+          "devDependencies": ["prisma"]
+        },
+        "postgres-drizzle": {
+          "label": "PostgreSQL + Drizzle",
+          "files": [
+            "shared/database/drizzle/client.ts",
+            "shared/database/drizzle/schema.ts"
+          ],
+          "dependencies": ["drizzle-orm", "postgres"],
+          "devDependencies": ["drizzle-kit"]
+        },
+        "mongodb-mongoose": {
+          "label": "MongoDB + Mongoose",
+          "files": [
+            "shared/database/mongoose/client.ts",
+            "shared/database/mongoose/models.ts"
+          ],
+          "dependencies": ["mongoose"],
+          "devDependencies": []
+        }
+      }
     },
     "security": {
       "name": "Security",

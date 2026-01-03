@@ -1,10 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
 /**
- * Prisma Client Singleton
- * 
- * This ensures only one instance of PrismaClient is created,
- * even during hot reloading in development.
+ * Prisma client singleton instance
+ * Prevents multiple instances in development with hot-reload
  */
 
 const globalForPrisma = globalThis as unknown as {
@@ -14,10 +12,9 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log:
-      process.env.NODE_ENV === 'development'
-        ? ['query', 'error', 'warn']
-        : ['error'],
+    log: process.env.NODE_ENV === 'development' 
+      ? ['query', 'error', 'warn'] 
+      : ['error'],
   });
 
 if (process.env.NODE_ENV !== 'production') {
@@ -25,17 +22,16 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 /**
- * Graceful shutdown handler
- * Call this when your app is shutting down
+ * Graceful shutdown
  */
-export async function disconnectDb(): Promise<void> {
+export async function disconnectPrisma(): Promise<void> {
   await prisma.$disconnect();
 }
 
 /**
  * Health check for database connection
  */
-export async function checkDbConnection(): Promise<boolean> {
+export async function checkDatabaseHealth(): Promise<boolean> {
   try {
     await prisma.$queryRaw`SELECT 1`;
     return true;
@@ -43,5 +39,3 @@ export async function checkDbConnection(): Promise<boolean> {
     return false;
   }
 }
-
-export default prisma;
