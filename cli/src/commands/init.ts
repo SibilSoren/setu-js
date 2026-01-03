@@ -17,7 +17,8 @@ import {
   getProjectName, 
   hasSrcDirectory,
   writeFile,
-  ensureDir
+  ensureDir,
+  createPackageJson
 } from '../utils/fs.js';
 
 interface InitOptions {
@@ -31,14 +32,36 @@ export async function init(options: InitOptions) {
   const cwd = process.cwd();
 
   // Step 1: Check if this is a Node.js project
-  const isNode = await isNodeProject(cwd);
+  let isNode = await isNodeProject(cwd);
   
   if (!isNode) {
-    p.log.error('No package.json found in current directory.');
-    p.log.info('Please run this command in an existing Node.js project, or run:');
-    p.log.info(chalk.cyan('  npm init -y'));
-    p.outro(chalk.red('Initialization cancelled.'));
-    process.exit(1);
+    p.log.warning('No package.json found in current directory.');
+    
+    if (options.yes) {
+      // Auto-create in non-interactive mode
+      const spinner = p.spinner();
+      spinner.start('Creating package.json...');
+      await createPackageJson(cwd, path.basename(cwd));
+      spinner.stop('Created package.json');
+      isNode = true;
+    } else {
+      const shouldInit = await p.confirm({
+        message: 'Would you like to initialize a new Node.js project here?',
+        initialValue: true,
+      });
+
+      if (p.isCancel(shouldInit) || !shouldInit) {
+        p.outro(chalk.yellow('Initialization cancelled.'));
+        process.exit(0);
+      }
+
+      // Create package.json
+      const spinner = p.spinner();
+      spinner.start('Creating package.json...');
+      await createPackageJson(cwd, path.basename(cwd));
+      spinner.stop('Created package.json');
+      isNode = true;
+    }
   }
 
   // Step 2: Check if yantr.json already exists
