@@ -23,26 +23,26 @@ export default function HomePage() {
         <div className="relative w-full max-w-4xl h-[400px] mb-12">
           {/* Main Hub */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-            <div className="w-32 h-32 bg-[#4a9eff] rounded-[40px] shadow-[0_20px_60px_rgba(74,158,255,0.4)] flex items-center justify-center animate-pulse">
-              <Image src="/logo.png" alt="YantrJS" width={80} height={80} />
+            <div className="w-32 h-32 rounded-[40px] flex items-center justify-center">
+              <Image src="/logo.png" alt="YantrJS" width={150} height={150} />
             </div>
           </div>
 
           {/* Spokes */}
-          <div className="absolute top-[10%] left-[15%] w-16 h-16 bg-[#4a9eff] rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '0s' }}>
-            <img src="https://skillicons.dev/icons?i=express" alt="Express" width={32} height={32} />
+          <div className="absolute top-[10%] left-[15%] w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '0s' }}>
+            <img src="https://skillicons.dev/icons?i=express" alt="Express" width={40} height={40} />
           </div>
-          <div className="absolute top-[0%] left-[45%] w-14 h-14 bg-[#f97316] text-white rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '1s' }}>
-            <Zap className="w-7 h-7" />
+          <div className="absolute top-[0%] left-[45%] w-14 h-14 bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '1s' }}>
+            <img src="https://r2.better-t-stack.dev/icons/hono.svg" alt="Hono" width={36} height={36} />
           </div>
-          <div className="absolute top-[5%] right-[20%] w-18 h-18 bg-[#a855f7] text-white rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '2s' }}>
-            <Shield className="w-9 h-9" />
+          <div className="absolute top-[5%] right-[20%] w-18 h-18 bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '2s' }}>
+            <img src="https://skillicons.dev/icons?i=prisma" alt="Prisma" width={44} height={44} />
           </div>
-          <div className="absolute bottom-[20%] left-[10%] w-20 h-20 bg-[#06b6d4] text-white rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '1.5s' }}>
-            <Database className="w-10 h-10" />
+          <div className="absolute bottom-[20%] left-[10%] w-20 h-20 bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '1.5s' }}>
+            <img src="https://skillicons.dev/icons?i=postgres" alt="PostgreSQL" width={48} height={48} />
           </div>
-          <div className="absolute bottom-[10%] right-[15%] w-16 h-16 bg-[#f59e0b] text-white rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '0.5s' }}>
-             <Code className="w-8 h-8" />
+          <div className="absolute bottom-[10%] right-[15%] w-16 h-16 bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex items-center justify-center animate-float" style={{ animationDelay: '0.5s' }}>
+            <img src="https://r2.better-t-stack.dev/icons/fastify.svg" alt="Fastify" width={40} height={40} />
           </div>
         </div>
 

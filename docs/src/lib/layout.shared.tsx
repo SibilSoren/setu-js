@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 export function baseOptions(): BaseLayoutProps {
   return {
+    githubUrl: 'https://github.com/SibilSoren/yantr-js',
     nav: {
       title: (
         <>
@@ -25,11 +26,6 @@ export function baseOptions(): BaseLayoutProps {
       {
         text: 'Builder',
         url: '/builder',
-      },
-      {
-        text: 'GitHub',
-        url: 'https://github.com/SibilSoren/yantr-js',
-        external: true,
       },
     ],
   };

@@ -19,6 +19,14 @@ const config = {
         protocol: 'https',
         hostname: 'www.jwt.io',
       },
+      {
+        protocol: 'https',
+        hostname: 'getpino.io',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn-icons-png.flaticon.com',
+      },
     ],
   },
 };

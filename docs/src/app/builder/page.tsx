@@ -17,6 +17,8 @@ const ICONS = {
   sqlite: 'https://skillicons.dev/icons?i=sqlite',
   mongoose: 'https://r2.better-t-stack.dev/icons/mongoose.svg',
   jwt: 'https://www.jwt.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fjwt-flower.f20616b0.png&w=1920&q=75',
+  pino: 'https://getpino.io/pino-tree.png',
+  security: 'https://cdn-icons-png.flaticon.com/512/1821/1821790.png',
 };
 
 type Framework = 'express' | 'hono' | 'fastify';
@@ -299,12 +301,14 @@ export default function BuilderPage() {
                 <OptionCard
                   label="Logger"
                   description="Pino logging"
+                  icon={ICONS.pino}
                   selected={components.has('logger')}
                   onClick={() => toggleComponent('logger')}
                 />
                 <OptionCard
                   label="Security"
                   description="Rate limit + Helmet"
+                  icon={ICONS.security}
                   selected={components.has('security')}
                   onClick={() => toggleComponent('security')}
                 />
