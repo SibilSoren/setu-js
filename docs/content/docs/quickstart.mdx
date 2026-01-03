@@ -3,8 +3,6 @@ title: Quickstart
 description: Get started with YantrJS in 3 minutes.
 ---
 
-# Quickstart 🚀
-
 Get from zero to a production-ready API in minutes. YantrJS supports **Express**, **Hono**, and **Fastify**.
 
 ## 1. Installation
@@ -23,7 +21,14 @@ npm install -g yantr-js
 
 ## 2. Initialize your Project
 
-Run the `init` command in your project directory:
+### Option A: Create a new project
+
+```bash
+yantr init my-api --framework express --yes
+cd my-api
+```
+
+### Option B: Initialize in existing directory
 
 ```bash
 yantr init
@@ -32,10 +37,9 @@ yantr init
 YantrJS will:
 1. **Detect or create** your `package.json`
 2. **Ask which framework** you want (Express, Hono, or Fastify)
-3. **Create** `yantr.json` configuration
-4. **Install** framework-specific base templates
-
-> **Tip:** YantrJS can start a brand new project! Run `yantr init` in an empty directory and it will create everything for you.
+3. **Ask which runtime** you prefer (Node.js or Bun)
+4. **Create** `yantr.json` configuration
+5. **Install** framework-specific base templates
 
 ## 3. Add a Database
 
@@ -117,4 +121,4 @@ fastify.setErrorHandler(errorHandler);
 fastify.listen({ port: 3000 });
 ```
 
-That's it! You now have a production-ready foundation that you fully own. 🪛
+That's it! You now have a production-ready foundation that you fully own.

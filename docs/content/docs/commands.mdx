@@ -3,8 +3,6 @@ title: CLI Commands
 description: Complete reference for all YantrJS CLI commands.
 ---
 
-# CLI Commands 🪛
-
 YantrJS provides three primary commands to manage your backend project.
 
 ---
@@ -16,19 +14,40 @@ Initializes YantrJS in a new or existing project.
 ### Usage
 
 ```bash
-yantr init [options]
+yantr init [project-name] [options]
 ```
+
+### Arguments
+
+| Argument | Description |
+|----------|-------------|
+| `project-name` | Optional. Creates a new folder with this name |
 
 ### Options
 
 | Flag | Description |
 |------|-------------|
-| `--yes` | Use defaults for all prompts |
+| `-y, --yes` | Use defaults for all prompts |
+| `-f, --framework <framework>` | Framework to use (express, hono, fastify) |
+| `-r, --runtime <runtime>` | Runtime to use (node, bun) |
+
+### Examples
+
+```bash
+# Create new project in my-api folder
+yantr init my-api --framework express --yes
+
+# Initialize in current directory (interactive)
+yantr init
+
+# Initialize with Hono and Bun runtime
+yantr init my-hono-app --framework hono --runtime bun --yes
+```
 
 ### What it does
 
-1. **Detects or creates** `package.json` with your chosen framework
-2. **Prompts for framework** - Express, Hono, or Fastify
+1. **Creates project folder** (if project-name provided)
+2. **Detects or creates** `package.json` with your chosen framework
 3. **Creates** `yantr.json` configuration
 4. **Installs** framework-specific base templates (error-handler, zod-middleware)
 5. **Installs** `zod` for validation
@@ -60,6 +79,8 @@ yantr add <component> [options]
 | Flag | Description |
 |------|-------------|
 | `--overwrite` | Overwrite existing files |
+| `--type <type>` | Database type (postgres, mongodb) |
+| `--orm <orm>` | ORM to use (prisma, drizzle, mongoose) |
 
 ### Available Components
 
@@ -72,26 +93,26 @@ yantr add <component> [options]
 
 ### Database Selection
 
-When adding `database`, you'll be prompted to choose:
+When adding `database`, you can specify options directly:
 
-**Database Type:**
+```bash
+# Interactive mode
+yantr add database
+
+# Non-interactive with flags
+yantr add database --type postgres --orm prisma
+yantr add database --type postgres --orm drizzle
+yantr add database --type mongodb --orm mongoose
+```
+
+**Database Types:**
 - PostgreSQL
 - MongoDB
 
-**ORM (for PostgreSQL):**
-- Prisma (recommended)
-- Drizzle
-
-**ORM (for MongoDB):**
-- Mongoose
-
-```bash
-yantr add database
-# → Select database: PostgreSQL
-# → Select ORM: Prisma
-# → Creates lib/yantr/database/client.ts, db.ts
-# → Installs @prisma/client, prisma
-```
+**ORM Options:**
+- Prisma (PostgreSQL, default)
+- Drizzle (PostgreSQL)
+- Mongoose (MongoDB)
 
 ---
 
@@ -115,6 +136,7 @@ yantr generate <type> <name>
 
 ```bash
 yantr generate route users
+yantr g route orders  # 'g' is alias for generate
 ```
 
 Creates:
