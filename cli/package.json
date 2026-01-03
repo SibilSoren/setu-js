@@ -1,6 +1,6 @@
 {
   "name": "yantr-js",
-  "version": "0.1.0-beta.4",
+  "version": "0.1.0-beta.5",
   "description": "A Shadcn for Backend - Production-grade backend scaffolding CLI for Express.js",
   "author": "SibilSoren",
   "license": "MIT",
