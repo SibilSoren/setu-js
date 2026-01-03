@@ -19,6 +19,14 @@ export function baseOptions(): BaseLayoutProps {
     },
     links: [
       {
+        text: 'Docs',
+        url: '/docs',
+      },
+      {
+        text: 'Builder',
+        url: '/builder',
+      },
+      {
         text: 'GitHub',
         url: 'https://github.com/SibilSoren/yantr-js',
         external: true,

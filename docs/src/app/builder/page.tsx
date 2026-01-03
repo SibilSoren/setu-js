@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 
 // Skill Icons CDN URLs
@@ -16,6 +15,8 @@ const ICONS = {
   drizzle: 'https://r2.better-t-stack.dev/icons/drizzle.svg',
   mysql: 'https://skillicons.dev/icons?i=mysql',
   sqlite: 'https://skillicons.dev/icons?i=sqlite',
+  mongoose: 'https://r2.better-t-stack.dev/icons/mongoose.svg',
+  jwt: 'https://www.jwt.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fjwt-flower.f20616b0.png&w=1920&q=75',
 };
 
 type Framework = 'express' | 'hono' | 'fastify';
@@ -41,8 +42,8 @@ function OptionCard({ label, description, icon, selected, onClick, isDefault }: 
         group relative flex items-center gap-4 p-4 rounded-xl border transition-all duration-200
         hover:scale-[1.02] active:scale-[0.98]
         ${selected 
-          ? 'border-[#4a9eff] bg-[#4a9eff]/10 shadow-[0_0_20px_rgba(74,158,255,0.1)]' 
-          : 'border-slate-800 bg-slate-900/40 hover:border-slate-700 hover:bg-slate-800/60'
+          ? 'border-[#4a9eff] bg-[#4a9eff]/10 dark:bg-[#4a9eff]/10 shadow-[0_0_20px_rgba(74,158,255,0.1)]' 
+          : 'border-fd-border bg-fd-card hover:border-fd-primary/50 hover:bg-fd-muted'
         }
       `}
     >
@@ -57,16 +58,16 @@ function OptionCard({ label, description, icon, selected, onClick, isDefault }: 
         </div>
       )}
       {!icon && (
-        <div className="shrink-0 w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-400 text-lg font-bold group-hover:bg-zinc-700 transition-colors">
+        <div className="shrink-0 w-10 h-10 rounded-lg bg-fd-muted flex items-center justify-center text-fd-muted-foreground text-lg font-bold group-hover:bg-fd-accent transition-colors">
           {label[0]}
         </div>
       )}
       <div className="text-left min-w-0 pr-2">
-        <div className="text-sm font-bold text-white group-hover:text-[#4a9eff] transition-colors flex items-center gap-2">
+        <div className="text-sm font-bold text-fd-foreground group-hover:text-[#4a9eff] transition-colors flex items-center gap-2">
           {label}
         </div>
         {description && (
-          <div className="text-xs text-zinc-500 truncate group-hover:text-zinc-400 transition-colors">{description}</div>
+          <div className="text-xs text-fd-muted-foreground truncate group-hover:text-fd-foreground/70 transition-colors">{description}</div>
         )}
       </div>
       {selected && (
@@ -136,27 +137,7 @@ export default function BuilderPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-zinc-300 selection:bg-[#4a9eff]/30">
-      {/* Header */}
-      <header className="border-b border-slate-800 bg-[#1e293b]/80 backdrop-blur-xl sticky top-0 z-[100]">
-        <div className="max-w-[1440px] mx-auto px-8 py-5 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-4 group">
-            <div className="bg-[#4a9eff] rounded-xl  shadow-[0_0_20px_rgba(74,158,255,0.3)] group-hover:scale-110 transition-transform duration-300">
-              <Image src="/logo.png" alt="YantrJS" width={50} height={50}  />
-            </div>
-            <div className="flex items-center text-2xl font-[900] tracking-tight text-white leading-none">
-              YANTR<span className="text-[#4a9eff]">JS</span>&nbsp;BUILDER
-            </div>
-          </Link>
-          <Link 
-            href="/docs" 
-            className="text-sm font-bold text-slate-400 hover:text-[#4a9eff] transition-colors flex items-center gap-1 group"
-          >
-            ← <span className="group-hover:-translate-x-1 transition-transform">Back to Docs</span>
-          </Link>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-fd-background text-fd-foreground selection:bg-[#4a9eff]/30">
       <main className="max-w-[1440px] mx-auto px-8 py-10">
         <div className="grid lg:grid-cols-[1fr_420px] gap-16 items-start">
           
@@ -166,8 +147,8 @@ export default function BuilderPage() {
             <section>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-6 bg-[#4a9eff] rounded-full shadow-[0_0_15px_rgba(74,158,255,0.5)]" />
-                <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                  <span className="text-slate-500 font-mono text-sm">01.</span> Runtime
+                <h2 className="text-lg font-bold text-fd-foreground tracking-tight flex items-center gap-2">
+                  <span className="text-fd-muted-foreground font-mono text-sm">01.</span> Runtime
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -193,8 +174,8 @@ export default function BuilderPage() {
             <section>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-6 bg-[#4a9eff] rounded-full shadow-[0_0_15px_rgba(74,158,255,0.5)]" />
-                <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                  <span className="text-slate-500 font-mono text-sm">02.</span> Framework
+                <h2 className="text-lg font-bold text-fd-foreground tracking-tight flex items-center gap-2">
+                  <span className="text-fd-muted-foreground font-mono text-sm">02.</span> Framework
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -227,8 +208,8 @@ export default function BuilderPage() {
             <section>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-6 bg-[#4a9eff] rounded-full shadow-[0_0_15px_rgba(74,158,255,0.5)]" />
-                <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                  <span className="text-slate-500 font-mono text-sm">03.</span> Database
+                <h2 className="text-lg font-bold text-fd-foreground tracking-tight flex items-center gap-2">
+                  <span className="text-fd-muted-foreground font-mono text-sm">03.</span> Database
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -261,8 +242,8 @@ export default function BuilderPage() {
               <section className="animate-in fade-in zoom-in-95 duration-300">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-1 h-6 bg-[#4a9eff] rounded-full shadow-[0_0_15px_rgba(74,158,255,0.5)]" />
-                  <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                    <span className="text-slate-500 font-mono text-sm">04.</span> ORM
+                  <h2 className="text-lg font-bold text-fd-foreground tracking-tight flex items-center gap-2">
+                    <span className="text-fd-muted-foreground font-mono text-sm">04.</span> ORM
                   </h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -289,6 +270,7 @@ export default function BuilderPage() {
                     <OptionCard
                       label="Mongoose"
                       description="Schema modeling"
+                      icon={ICONS.mongoose}
                       selected={orm === 'mongoose'}
                       onClick={() => setOrm('mongoose')}
                       isDefault
@@ -302,14 +284,15 @@ export default function BuilderPage() {
             <section>
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1 h-6 bg-[#4a9eff] rounded-full shadow-[0_0_15px_rgba(74,158,255,0.5)]" />
-                <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                  <span className="text-slate-500 font-mono text-sm">05.</span> Components
+                <h2 className="text-lg font-bold text-fd-foreground tracking-tight flex items-center gap-2">
+                  <span className="text-fd-muted-foreground font-mono text-sm">05.</span> Components
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <OptionCard
                   label="Authentication"
                   description="JWT auth setup"
+                  icon={ICONS.jwt}
                   selected={components.has('auth')}
                   onClick={() => toggleComponent('auth')}
                 />
@@ -332,9 +315,9 @@ export default function BuilderPage() {
           {/* Right Panel - Command Output (Sticky) */}
           <div className="sticky top-28 space-y-6 animate-in fade-in slide-in-from-right-4 duration-700">
             {/* Project Name Card */}
-            <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl backdrop-blur-md relative overflow-hidden group">
+            <div className="bg-fd-card border border-fd-border p-6 rounded-2xl backdrop-blur-md relative overflow-hidden group">
               <div className="absolute top-0 right-0 w-32 h-32 bg-[#4a9eff]/5 blur-3xl -mr-16 -mt-16 group-hover:bg-[#4a9eff]/10 transition-colors" />
-              <label className="text-[11px] font-bold text-slate-500 mb-3 block uppercase tracking-widest">
+              <label className="text-[11px] font-bold text-fd-muted-foreground mb-3 block uppercase tracking-widest">
                 Project Identity
               </label>
               <div className="relative">
@@ -342,34 +325,34 @@ export default function BuilderPage() {
                   type="text"
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-white focus:outline-none focus:border-[#4a9eff] transition-all placeholder:text-slate-700 font-medium"
+                  className="w-full px-4 py-3 bg-fd-background border border-fd-border rounded-xl text-fd-foreground focus:outline-none focus:border-[#4a9eff] transition-all placeholder:text-fd-muted-foreground font-medium"
                   placeholder="App name..."
                 />
               </div>
             </div>
 
             {/* Command Preview Card */}
-            <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-2xl shadow-[#4a9eff]/10 overflow-hidden group relative">
+            <div className="bg-fd-card rounded-2xl border border-fd-border shadow-2xl shadow-[#4a9eff]/10 overflow-hidden group relative">
               <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
                 <div className="bg-[#4a9eff] rounded-lg p-1 w-8 h-8 flex items-center justify-center">
                   <Image src="/logo.png" alt="YantrJS" width={16} height={16} className="brightness-0 invert" />
                 </div>
               </div>
-              <div className="bg-[#1e293b] px-5 py-3 border-b border-slate-800/50 flex items-center justify-between">
+              <div className="bg-fd-muted px-5 py-3 border-b border-fd-border flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/50" />
                   <div className="w-3 h-3 rounded-full bg-amber-500/50" />
                   <div className="w-3 h-3 rounded-full bg-[#4a9eff]/50" />
                 </div>
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Terminal</span>
+                <span className="text-[10px] font-bold text-fd-muted-foreground uppercase tracking-widest">Terminal</span>
               </div>
-              <div className="p-6 font-mono text-sm leading-relaxed min-h-[140px] flex items-center">
+              <div className="p-6 font-mono text-sm leading-relaxed min-h-[140px] flex items-center bg-slate-950 dark:bg-slate-950">
                 <pre className="text-slate-300 break-all whitespace-pre-wrap">
                   <span className="text-[#4a9eff] mr-2">$</span>
                   {generateCommand()}
                 </pre>
               </div>
-              <div className="p-4 bg-slate-950/50 border-t border-slate-800/50">
+              <div className="p-4 bg-fd-secondary/50 border-t border-fd-border">
                 <button
                   onClick={copyToClipboard}
                   className={`
@@ -400,12 +383,12 @@ export default function BuilderPage() {
             </div>
 
             {/* Stack Visualizer */}
-            <div className="bg-slate-900/30 border border-slate-800/50 p-6 rounded-2xl">
-              <label className="text-[11px] font-bold text-slate-500 mb-4 block uppercase tracking-widest">
+            <div className="bg-fd-card/30 border border-fd-border/50 p-6 rounded-2xl">
+              <label className="text-[11px] font-bold text-fd-muted-foreground mb-4 block uppercase tracking-widest">
                 Selected Components
               </label>
               <div className="flex flex-wrap gap-2">
-                <div className="px-3 py-1.5 bg-slate-800/50 text-slate-400 border border-slate-700/50 rounded-lg text-xs font-bold hover:border-[#4a9eff]/50 transition-colors">
+                <div className="px-3 py-1.5 bg-fd-muted text-fd-muted-foreground border border-fd-border rounded-lg text-xs font-bold hover:border-[#4a9eff]/50 transition-colors">
                   {runtime}
                 </div>
                 <div className="px-3 py-1.5 bg-[#4a9eff]/10 text-[#4a9eff] border border-[#4a9eff]/20 rounded-lg text-xs font-bold transition-all hover:bg-[#4a9eff]/20">
@@ -413,10 +396,10 @@ export default function BuilderPage() {
                 </div>
                 {database !== 'none' && (
                   <>
-                    <div className="px-3 py-1.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-lg text-xs font-bold">
+                    <div className="px-3 py-1.5 bg-blue-500/10 text-blue-500 dark:text-blue-400 border border-blue-500/20 rounded-lg text-xs font-bold">
                       {database}
                     </div>
-                    <div className="px-3 py-1.5 bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-lg text-xs font-bold">
+                    <div className="px-3 py-1.5 bg-purple-500/10 text-purple-500 dark:text-purple-400 border border-purple-500/20 rounded-lg text-xs font-bold">
                       {orm}
                     </div>
                   </>
@@ -433,7 +416,7 @@ export default function BuilderPage() {
             <div className="p-4 bg-[#4a9eff]/5 border border-[#4a9eff]/10 rounded-2xl">
               <div className="flex gap-3">
                 <span className="text-[#4a9eff] pt-0.5 select-none">💡</span>
-                <p className="text-[11px] leading-relaxed text-slate-400">
+                <p className="text-[11px] leading-relaxed text-fd-muted-foreground">
                   Copy this command and run it in your terminal to scaffold your entire backend in seconds with production-ready patterns.
                 </p>
               </div>

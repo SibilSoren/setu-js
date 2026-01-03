@@ -15,7 +15,14 @@ export default function Layout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
-        <RootProvider>{children}</RootProvider>
+        <RootProvider
+          theme={{
+            defaultTheme: 'light',
+            attribute: 'class',
+          }}
+        >
+          {children}
+        </RootProvider>
       </body>
     </html>
   );
