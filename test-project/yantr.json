@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/SibilSoren/yantr-js/main/cli/schema.json",
+  "projectName": "test-project",
+  "srcDir": ".",
+  "framework": "express",
+  "database": {
+    "type": "postgres",
+    "orm": "prisma"
+  },
+  "packageManager": "npm",
+  "installedComponents": [
+    "base",
+    "database",
+    "auth",
+    "logger",
+    "security"
+  ]
+}

@@ -67,9 +67,23 @@ export async function hasSrcDirectory(cwd: string): Promise<boolean> {
 }
 
 /**
- * Create a minimal package.json for a new project
+ * Create a minimal package.json for a new project with framework dependency
  */
-export async function createPackageJson(cwd: string, name: string): Promise<void> {
+export async function createPackageJson(
+  cwd: string, 
+  name: string,
+  framework?: 'express' | 'hono' | 'fastify'
+): Promise<void> {
+  const frameworkDeps: Record<string, string> = {};
+  
+  if (framework === 'express') {
+    frameworkDeps['express'] = '^4.18.0';
+  } else if (framework === 'hono') {
+    frameworkDeps['hono'] = '^4.0.0';
+  } else if (framework === 'fastify') {
+    frameworkDeps['fastify'] = '^4.0.0';
+  }
+
   const packageJson = {
     name: name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
     version: '1.0.0',
@@ -83,6 +97,7 @@ export async function createPackageJson(cwd: string, name: string): Promise<void
     keywords: [],
     author: '',
     license: 'ISC',
+    dependencies: frameworkDeps,
   };
 
   await writeFile(

@@ -10,7 +10,8 @@ import {
 import { 
   configExists, 
   createConfig, 
-  writeConfig 
+  writeConfig,
+  type Framework
 } from '../lib/config.js';
 import { 
   isNodeProject, 
@@ -20,6 +21,11 @@ import {
   ensureDir,
   createPackageJson
 } from '../utils/fs.js';
+import {
+  detectFramework,
+  FRAMEWORK_INFO,
+  isFrameworkSupported
+} from '../utils/detector.js';
 
 interface InitOptions {
   yes?: boolean;
@@ -31,17 +37,20 @@ export async function init(options: InitOptions) {
 
   const cwd = process.cwd();
 
-  // Step 1: Check if this is a Node.js project
+  // Step 1: Check if this is a Node.js project and detect/select framework
   let isNode = await isNodeProject(cwd);
+  let framework: Framework;
   
   if (!isNode) {
     p.log.warning('No package.json found in current directory.');
     
+    // Ask for framework first when creating new project
     if (options.yes) {
-      // Auto-create in non-interactive mode
+      // Default to Express in non-interactive mode
+      framework = 'express';
       const spinner = p.spinner();
-      spinner.start('Creating package.json...');
-      await createPackageJson(cwd, path.basename(cwd));
+      spinner.start('Creating package.json with Express...');
+      await createPackageJson(cwd, path.basename(cwd), framework);
       spinner.stop('Created package.json');
       isNode = true;
     } else {
@@ -55,12 +64,60 @@ export async function init(options: InitOptions) {
         process.exit(0);
       }
 
-      // Create package.json
+      // Ask which framework to use
+      const selectedFramework = await p.select({
+        message: 'Which framework would you like to use?',
+        initialValue: 'express' as Framework,
+        options: [
+          { value: 'express', label: 'Express.js - Fast, unopinionated, minimalist' },
+          { value: 'hono', label: 'Hono - Ultrafast, lightweight, multi-runtime' },
+          { value: 'fastify', label: 'Fastify - High performance web framework' },
+        ],
+      });
+
+      if (p.isCancel(selectedFramework)) {
+        p.outro(chalk.yellow('Initialization cancelled.'));
+        process.exit(0);
+      }
+
+      framework = selectedFramework as Framework;
+
+      // Create package.json with framework dependency
       const spinner = p.spinner();
-      spinner.start('Creating package.json...');
-      await createPackageJson(cwd, path.basename(cwd));
+      spinner.start(`Creating package.json with ${FRAMEWORK_INFO[framework].name}...`);
+      await createPackageJson(cwd, path.basename(cwd), framework);
       spinner.stop('Created package.json');
       isNode = true;
+    }
+  } else {
+    // Detect framework from existing package.json
+    const detected = await detectFramework(cwd);
+    
+    if (detected) {
+      framework = detected;
+      p.log.info(`Detected framework: ${chalk.cyan(FRAMEWORK_INFO[framework].name)}`);
+    } else {
+      // No framework detected, ask user
+      if (options.yes) {
+        framework = 'express';
+      } else {
+        const selectedFramework = await p.select({
+          message: 'Which framework are you using?',
+          initialValue: 'express' as Framework,
+          options: [
+            { value: 'express', label: 'Express.js' },
+            { value: 'hono', label: 'Hono' },
+            { value: 'fastify', label: 'Fastify' },
+          ],
+        });
+
+        if (p.isCancel(selectedFramework)) {
+          p.outro(chalk.yellow('Initialization cancelled.'));
+          process.exit(0);
+        }
+
+        framework = selectedFramework as Framework;
+      }
     }
   }
 
@@ -144,249 +201,61 @@ export async function init(options: InitOptions) {
   const spinner = p.spinner();
   spinner.start('Creating configuration...');
 
-  const config = createConfig(projectName, srcDir, packageManager);
+  const config = createConfig(projectName, srcDir, framework, packageManager);
   await writeConfig(cwd, config);
   
   spinner.stop('Created yantr.json');
 
-  // Step 5: Copy base templates
+  // Step 5: Copy base templates from registry
   spinner.start('Setting up base templates...');
 
   const templatesDir = path.join(srcDir, 'lib', 'yantr');
   await ensureDir(path.join(cwd, templatesDir));
 
-  // Registry templates path
+  // Load templates from registry based on framework
   const cliDir = path.dirname(new URL(import.meta.url).pathname);
+  // From dist/index.js, go up to cli/ then into registry/templates
+  const registryDir = path.resolve(cliDir, '../registry/templates');
   
-  // Base templates
-  const errorHandlerContent = `import type { Request, Response, NextFunction } from 'express';
+  // Determine template paths based on framework
+  const frameworkDir = framework;  // 'express', 'hono', or 'fastify'
+  const baseTemplatesDir = path.join(registryDir, frameworkDir, 'base');
+  
+  try {
+    const errorHandlerPath = path.join(baseTemplatesDir, 'error-handler.ts');
+    const zodMiddlewarePath = path.join(baseTemplatesDir, 'zod-middleware.ts');
+    
+    const errorHandlerContent = await fs.readFile(errorHandlerPath, 'utf-8');
+    const zodMiddlewareContent = await fs.readFile(zodMiddlewarePath, 'utf-8');
 
-/**
- * Custom error class for application errors
- */
-export class AppError extends Error {
-  public readonly statusCode: number;
-  public readonly isOperational: boolean;
-  public readonly code?: string;
+    await writeFile(
+      path.join(cwd, templatesDir, 'error-handler.ts'),
+      errorHandlerContent
+    );
 
-  constructor(
-    message: string,
-    statusCode: number = 500,
-    isOperational: boolean = true,
-    code?: string
-  ) {
-    super(message);
-    this.statusCode = statusCode;
-    this.isOperational = isOperational;
-    this.code = code;
-
-    Object.setPrototypeOf(this, AppError.prototype);
-    Error.captureStackTrace(this, this.constructor);
+    await writeFile(
+      path.join(cwd, templatesDir, 'zod-middleware.ts'),
+      zodMiddlewareContent
+    );
+  } catch (error) {
+    spinner.stop('Could not load base templates');
+    p.log.error(`Failed to load templates for ${framework}: ${error}`);
+    process.exit(1);
   }
-}
-
-/**
- * Common HTTP error classes
- */
-export class NotFoundError extends AppError {
-  constructor(message: string = 'Resource not found') {
-    super(message, 404, true, 'NOT_FOUND');
-  }
-}
-
-export class BadRequestError extends AppError {
-  constructor(message: string = 'Bad request') {
-    super(message, 400, true, 'BAD_REQUEST');
-  }
-}
-
-export class UnauthorizedError extends AppError {
-  constructor(message: string = 'Unauthorized') {
-    super(message, 401, true, 'UNAUTHORIZED');
-  }
-}
-
-export class ForbiddenError extends AppError {
-  constructor(message: string = 'Forbidden') {
-    super(message, 403, true, 'FORBIDDEN');
-  }
-}
-
-export class ConflictError extends AppError {
-  constructor(message: string = 'Conflict') {
-    super(message, 409, true, 'CONFLICT');
-  }
-}
-
-export class ValidationError extends AppError {
-  public readonly errors: Record<string, string[]>;
-
-  constructor(errors: Record<string, string[]>) {
-    super('Validation failed', 422, true, 'VALIDATION_ERROR');
-    this.errors = errors;
-  }
-}
-
-/**
- * Global error handler middleware
- */
-export function errorHandler(
-  err: Error,
-  _req: Request,
-  res: Response,
-  _next: NextFunction
-): void {
-  console.error('[Error]', err);
-
-  if (err instanceof AppError) {
-    const response: Record<string, unknown> = {
-      success: false,
-      error: {
-        message: err.message,
-        code: err.code,
-      },
-    };
-
-    if (err instanceof ValidationError) {
-      response.error = {
-        ...response.error as object,
-        details: err.errors,
-      };
-    }
-
-    res.status(err.statusCode).json(response);
-    return;
-  }
-
-  const statusCode = 500;
-  const message = process.env.NODE_ENV === 'production'
-    ? 'Internal server error'
-    : err.message;
-
-  res.status(statusCode).json({
-    success: false,
-    error: {
-      message,
-      code: 'INTERNAL_ERROR',
-    },
-  });
-}
-
-/**
- * Async handler wrapper to catch errors in async route handlers
- */
-export function asyncHandler(
-  fn: (req: Request, res: Response, next: NextFunction) => Promise<void>
-) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    Promise.resolve(fn(req, res, next)).catch(next);
-  };
-}
-`;
-
-  const zodMiddlewareContent = `import type { Request, Response, NextFunction } from 'express';
-import { z, ZodError, ZodSchema } from 'zod';
-import { ValidationError } from './error-handler';
-
-type RequestLocation = 'body' | 'query' | 'params';
-
-interface ValidateOptions {
-  body?: ZodSchema;
-  query?: ZodSchema;
-  params?: ZodSchema;
-}
-
-/**
- * Format Zod errors into a readable format
- */
-function formatZodErrors(error: ZodError): Record<string, string[]> {
-  const errors: Record<string, string[]> = {};
-
-  for (const issue of error.issues) {
-    const path = issue.path.join('.');
-    const key = path || 'root';
-
-    if (!errors[key]) {
-      errors[key] = [];
-    }
-
-    errors[key].push(issue.message);
-  }
-
-  return errors;
-}
-
-/**
- * Validate request data against Zod schemas
- */
-export function validate(schemas: ValidateOptions) {
-  return async (req: Request, _res: Response, next: NextFunction) => {
-    const allErrors: Record<string, string[]> = {};
-    const locations: RequestLocation[] = ['body', 'query', 'params'];
-
-    for (const location of locations) {
-      const schema = schemas[location];
-
-      if (schema) {
-        const result = await schema.safeParseAsync(req[location]);
-
-        if (!result.success) {
-          const errors = formatZodErrors(result.error);
-
-          for (const [key, messages] of Object.entries(errors)) {
-            const prefixedKey = \`\${location}.\${key}\`;
-            allErrors[prefixedKey] = messages;
-          }
-        } else {
-          req[location] = result.data;
-        }
-      }
-    }
-
-    if (Object.keys(allErrors).length > 0) {
-      return next(new ValidationError(allErrors));
-    }
-
-    next();
-  };
-}
-
-export function validateBody<T extends ZodSchema>(schema: T) {
-  return validate({ body: schema });
-}
-
-export function validateQuery<T extends ZodSchema>(schema: T) {
-  return validate({ query: schema });
-}
-
-export function validateParams<T extends ZodSchema>(schema: T) {
-  return validate({ params: schema });
-}
-
-export { z };
-`;
-
-  await writeFile(
-    path.join(cwd, templatesDir, 'error-handler.ts'),
-    errorHandlerContent
-  );
-
-  await writeFile(
-    path.join(cwd, templatesDir, 'zod-middleware.ts'),
-    zodMiddlewareContent
-  );
 
   spinner.stop('Base templates created');
 
   // Step 6: Install dependencies
   spinner.start('Installing dependencies...');
 
+  const deps = ['zod'];
+
   try {
-    await installDependencies(packageManager, ['zod'], cwd, false);
+    await installDependencies(packageManager, deps, cwd, false);
     spinner.stop('Dependencies installed');
   } catch (error) {
     spinner.stop('Could not install dependencies automatically');
-    p.log.warning(`Please run: ${chalk.cyan(`${packageManager} add zod`)}`);
+    p.log.warning(`Please run: ${chalk.cyan(`${packageManager} add ${deps.join(' ')}`)}`);
   }
 
   // Summary
@@ -397,12 +266,25 @@ ${chalk.green('✓')} ${templatesDir}/zod-middleware.ts`,
     'Files created'
   );
 
+  // Framework-specific next steps
   p.log.info('Next steps:');
-  p.log.step(1, `Add error handler to your Express app:`);
-  console.log(chalk.gray(`   import { errorHandler } from '${templatesDir}/error-handler';`));
-  console.log(chalk.gray(`   app.use(errorHandler);`));
+  
+  if (framework === 'hono') {
+    p.log.step(1, `Add error handler to your Hono app:`);
+    console.log(chalk.gray(`   import { onError } from '${templatesDir}/error-handler';`));
+    console.log(chalk.gray(`   app.onError(onError);`));
+  } else if (framework === 'fastify') {
+    p.log.step(1, `Add error handler to your Fastify app:`);
+    console.log(chalk.gray(`   import { errorHandler } from '${templatesDir}/error-handler';`));
+    console.log(chalk.gray(`   fastify.setErrorHandler(errorHandler);`));
+  } else {
+    p.log.step(1, `Add error handler to your Express app:`);
+    console.log(chalk.gray(`   import { errorHandler } from '${templatesDir}/error-handler';`));
+    console.log(chalk.gray(`   app.use(errorHandler);`));
+  }
+  
   p.log.step(2, `Add components: ${chalk.cyan('yantr add auth')}`);
   p.log.step(3, `Generate routes: ${chalk.cyan('yantr generate route users')}`);
 
-  p.outro(chalk.green('Yantr initialized successfully! 🪛'));
+  p.outro(chalk.green(`YantrJS initialized with ${FRAMEWORK_INFO[framework].name}! 🪛`));
 }

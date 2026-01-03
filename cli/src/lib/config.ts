@@ -4,12 +4,39 @@ import path from 'path';
 import type { PackageManager } from './installer.js';
 
 /**
+ * Supported frameworks
+ */
+export type Framework = 'express' | 'hono' | 'fastify';
+
+/**
+ * Supported database types
+ */
+export type DatabaseType = 'postgres' | 'mongodb';
+
+/**
+ * Supported ORMs
+ */
+export type OrmType = 'prisma' | 'drizzle' | 'mongoose';
+
+/**
+ * Database configuration
+ */
+export const DatabaseConfigSchema = z.object({
+  type: z.enum(['postgres', 'mongodb']),
+  orm: z.enum(['prisma', 'drizzle', 'mongoose']),
+});
+
+export type DatabaseConfig = z.infer<typeof DatabaseConfigSchema>;
+
+/**
  * Schema for yantr.json configuration file
  */
 export const SetuConfigSchema = z.object({
   $schema: z.string().optional(),
   projectName: z.string(),
   srcDir: z.string(),
+  framework: z.enum(['express', 'hono', 'fastify']).default('express'),
+  database: DatabaseConfigSchema.optional(),
   packageManager: z.enum(['npm', 'pnpm', 'yarn', 'bun'] as [PackageManager, ...PackageManager[]]),
   installedComponents: z.array(z.string()),
 });
@@ -53,12 +80,14 @@ export async function writeConfig(cwd: string, config: SetuConfig): Promise<void
 export function createConfig(
   projectName: string,
   srcDir: string,
+  framework: Framework,
   packageManager: PackageManager
 ): SetuConfig {
   return {
     $schema: 'https://raw.githubusercontent.com/SibilSoren/yantr-js/main/cli/schema.json',
     projectName,
     srcDir,
+    framework,
     packageManager,
     installedComponents: ['base'],
   };
@@ -85,4 +114,20 @@ export async function isComponentInstalled(cwd: string, componentName: string): 
   } catch {
     return false;
   }
+}
+
+/**
+ * Set database configuration in yantr.json
+ */
+export async function setDatabaseConfig(
+  cwd: string, 
+  dbType: DatabaseType, 
+  orm: OrmType
+): Promise<void> {
+  const config = await readConfig(cwd);
+  config.database = {
+    type: dbType,
+    orm: orm,
+  };
+  await writeConfig(cwd, config);
 }
