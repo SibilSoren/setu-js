@@ -24,21 +24,21 @@
 
 ---
 
-## ✨ Philosophy
+## Philosophy
 
 **Ownership over abstraction.** No hidden dependencies for core logic. Just clean, customizable TypeScript code that you own and can modify.
 
-- 🎯 **You own the code** — Injected directly into your project
-- 🔒 **Type-safe** — Built with TypeScript and Zod
-- ⚡ **Production-ready** — Battle-tested patterns
-- 🔌 **Zero lock-in** — No framework dependencies
+- **You own the code** — Injected directly into your project
+- **Type-safe** — Built with TypeScript and Zod
+- **Production-ready** — Battle-tested patterns
+- **Zero lock-in** — No framework dependencies
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
-# In your existing Express.js project
+# Initialize in your project directory
 npx yantr-js init
 
 # Add components
@@ -49,11 +49,21 @@ npx yantr-js add database
 npx yantr-js generate route users
 ```
 
-> 📖 **Full documentation:** [yantrjs.vercel.app/docs](https://yantrjs.vercel.app/docs)
+> **Full documentation:** [yantrjs.vercel.app/docs](https://yantrjs.vercel.app/docs)
 
 ---
 
-## 📦 Installation
+## Visual Builder
+
+Configure your backend stack visually with our interactive builder:
+
+**[yantrjs.vercel.app/builder](https://yantrjs.vercel.app/builder)**
+
+Select your framework, runtime, database, ORM, and components — then copy the generated CLI commands.
+
+---
+
+## Installation
 
 ```bash
 # Using npm
@@ -74,15 +84,48 @@ npx yantr-js <command>
 
 ---
 
-## 🛠️ Commands
+## Frameworks
+
+YantrJS supports multiple backend frameworks:
+
+| Framework | Description |
+|-----------|-------------|
+| **Express.js** | Classic and flexible (default) |
+| **Hono** | Ultrafast multi-runtime framework |
+| **Fastify** | High throughput and low overhead |
+
+```bash
+yantr init --framework express  # or hono, fastify
+```
+
+---
+
+## Runtimes
+
+Choose your preferred JavaScript runtime:
+
+| Runtime | Description |
+|---------|-------------|
+| **Node.js** | Standard runtime (default) |
+| **Bun** | Fast all-in-one runtime |
+
+```bash
+yantr init --runtime bun
+```
+
+---
+
+## Commands
 
 ### `yantr init`
 
 Initialize YantrJS in your project. Creates `yantr.json` and base templates.
 
 ```bash
-yantr init          # Interactive mode
-yantr init --yes    # Use defaults
+yantr init                      # Interactive mode
+yantr init --yes                # Use defaults
+yantr init --framework hono     # Specify framework
+yantr init --runtime bun        # Specify runtime
 ```
 
 ### `yantr add <component>`
@@ -92,7 +135,7 @@ Add production-ready components to your project.
 ```bash
 yantr add auth       # JWT authentication
 yantr add logger     # Pino logging
-yantr add database   # Prisma setup
+yantr add database   # Database setup with ORM
 yantr add security   # Rate limiting + Helmet
 ```
 
@@ -107,18 +150,31 @@ yantr g route orders  # 'g' is an alias
 
 ---
 
-## 📦 Components
+## Components
 
 | Component | Description | Dependencies |
 |-----------|-------------|--------------|
 | `auth` | JWT with refresh tokens, cookie support | jsonwebtoken, bcryptjs, cookie-parser |
 | `logger` | Structured logging with Pino | pino, pino-http, pino-pretty |
-| `database` | Prisma ORM with singleton & utilities | @prisma/client |
+| `database` | Database setup with ORM choice | Prisma, Drizzle, or Mongoose |
 | `security` | Rate limiting + Helmet headers | helmet, express-rate-limit |
+
+### Database Options
+
+| Database | ORM Options |
+|----------|-------------|
+| PostgreSQL | Prisma (default), Drizzle |
+| MongoDB | Mongoose |
+
+```bash
+yantr add database --type postgres --orm prisma
+yantr add database --type postgres --orm drizzle
+yantr add database --type mongodb --orm mongoose
+```
 
 ---
 
-## 💡 Example Usage
+## Example Usage
 
 After running `yantr init` and `yantr add auth`:
 
@@ -139,7 +195,7 @@ app.listen(3000);
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 `yantr.json` stores your project configuration:
 
@@ -147,6 +203,8 @@ app.listen(3000);
 {
   "$schema": "https://raw.githubusercontent.com/SibilSoren/yantr-js/main/cli/schema.json",
   "projectName": "my-yantr-api",
+  "framework": "express",
+  "runtime": "node",
   "srcDir": "./src",
   "packageManager": "pnpm",
   "installedComponents": ["base", "auth"]
@@ -155,7 +213,7 @@ app.listen(3000);
 
 ---
 
-## 📦 Package Manager Support
+## Package Manager Support
 
 YantrJS automatically detects and uses your preferred package manager:
 
@@ -166,18 +224,18 @@ YantrJS automatically detects and uses your preferred package manager:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md).
 
 ---
 
-## 📄 License
+## License
 
 MIT © [SibilSoren](https://github.com/SibilSoren)
 
 ---
 
 <p align="center">
-  Built with ❤️ by the YantrJS community
+  Built by the YantrJS team
 </p>
