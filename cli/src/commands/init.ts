@@ -18,165 +18,36 @@ import {
   getProjectName, 
   hasSrcDirectory,
   writeFile,
-  ensureDir,
-  createPackageJson
+  ensureDir
 } from '../utils/fs.js';
 import {
   detectFramework,
-  FRAMEWORK_INFO,
-  isFrameworkSupported
+  FRAMEWORK_INFO
 } from '../utils/detector.js';
 
 interface InitOptions {
   yes?: boolean;
   framework?: string;
-  runtime?: string;
 }
 
-export async function init(projectNameArg: string | undefined, options: InitOptions) {
+export async function init(options: InitOptions) {
   console.clear();
   p.intro(chalk.bgCyan.black(' 🪛 yantr init '));
 
-  let cwd = process.cwd();
+  const cwd = process.cwd();
   
-  // If project name is provided, create directory and use it
-  if (projectNameArg) {
-    const targetDir = path.resolve(cwd, projectNameArg);
-    
-    // Check if directory already exists
-    if (await fs.pathExists(targetDir)) {
-      const isEmpty = (await fs.readdir(targetDir)).length === 0;
-      if (!isEmpty) {
-        p.log.error(`Directory "${projectNameArg}" already exists and is not empty.`);
-        process.exit(1);
-      }
-    } else {
-      await ensureDir(targetDir);
-      p.log.info(`Created directory: ${chalk.cyan(projectNameArg)}`);
-    }
-    
-    cwd = targetDir;
-  }
-
-  // Step 1: Check if this is a Node.js project and detect/select framework
-  let isNode = await isNodeProject(cwd);
-  let framework: Framework;
+  // Check if this is a Node.js project
+  const isNode = await isNodeProject(cwd);
   
   if (!isNode) {
-    if (!projectNameArg) {
-      p.log.warning('No package.json found in current directory.');
-    }
-    
-    // Ask for framework first when creating new project
-    if (options.yes || options.framework) {
-      // Use provided framework or default to Express
-      const validFrameworks = ['express', 'hono', 'fastify'];
-      if (options.framework && !validFrameworks.includes(options.framework)) {
-        p.log.error(`Invalid framework: ${options.framework}. Use: express, hono, or fastify`);
-        process.exit(1);
-      }
-      framework = (options.framework as Framework) || 'express';
-      const runtime = (options.runtime as 'node' | 'bun') || 'node';
-      const spinner = p.spinner();
-      const folderName = projectNameArg || path.basename(cwd);
-      spinner.start(`Creating package.json with ${FRAMEWORK_INFO[framework].name} for ${runtime}...`);
-      await createPackageJson(cwd, folderName, framework, runtime);
-      spinner.stop('Created package.json');
-      isNode = true;
-    } else {
-      const shouldInit = await p.confirm({
-        message: projectNameArg 
-          ? `Initialize a new Node.js project in "${projectNameArg}"?`
-          : 'Would you like to initialize a new Node.js project here?',
-        initialValue: true,
-      });
-
-      if (p.isCancel(shouldInit) || !shouldInit) {
-        p.outro(chalk.yellow('Initialization cancelled.'));
-        process.exit(0);
-      }
-
-      // Ask which framework to use
-      const selectedFramework = await p.select({
-        message: 'Which framework would you like to use?',
-        initialValue: 'express' as Framework,
-        options: [
-          { value: 'express', label: 'Express.js - Fast, unopinionated, minimalist' },
-          { value: 'hono', label: 'Hono - Ultrafast, lightweight, multi-runtime' },
-          { value: 'fastify', label: 'Fastify - High performance web framework' },
-        ],
-      });
-
-      if (p.isCancel(selectedFramework)) {
-        p.outro(chalk.yellow('Initialization cancelled.'));
-        process.exit(0);
-      }
-
-      framework = selectedFramework as Framework;
-
-      // Ask for runtime
-      const selectedRuntime = await p.select({
-        message: 'Which runtime would you like to use?',
-        initialValue: 'node' as const,
-        options: [
-          { value: 'node', label: 'Node.js - Standard JavaScript runtime' },
-          { value: 'bun', label: 'Bun - Fast all-in-one runtime' },
-        ],
-      });
-
-      if (p.isCancel(selectedRuntime)) {
-        p.outro(chalk.yellow('Initialization cancelled.'));
-        process.exit(0);
-      }
-
-      const runtime = selectedRuntime as 'node' | 'bun';
-
-      // Create package.json with framework dependency
-      const spinner = p.spinner();
-      const folderName = projectNameArg || path.basename(cwd);
-      spinner.start(`Creating package.json with ${FRAMEWORK_INFO[framework].name} for ${runtime}...`);
-      await createPackageJson(cwd, folderName, framework, runtime);
-      spinner.stop('Created package.json');
-      isNode = true;
-    }
-  } else {
-    // Detect framework from existing package.json
-    const detected = await detectFramework(cwd);
-    
-    if (detected) {
-      framework = detected;
-      p.log.info(`Detected framework: ${chalk.cyan(FRAMEWORK_INFO[framework].name)}`);
-    } else {
-      // No framework detected, ask user
-      if (options.yes || options.framework) {
-        const validFrameworks = ['express', 'hono', 'fastify'];
-        if (options.framework && !validFrameworks.includes(options.framework)) {
-          p.log.error(`Invalid framework: ${options.framework}. Use: express, hono, or fastify`);
-          process.exit(1);
-        }
-        framework = (options.framework as Framework) || 'express';
-      } else {
-        const selectedFramework = await p.select({
-          message: 'Which framework are you using?',
-          initialValue: 'express' as Framework,
-          options: [
-            { value: 'express', label: 'Express.js' },
-            { value: 'hono', label: 'Hono' },
-            { value: 'fastify', label: 'Fastify' },
-          ],
-        });
-
-        if (p.isCancel(selectedFramework)) {
-          p.outro(chalk.yellow('Initialization cancelled.'));
-          process.exit(0);
-        }
-
-        framework = selectedFramework as Framework;
-      }
-    }
+    p.log.error('No package.json found in current directory.');
+    p.log.info(`To create a new project, run: ${chalk.cyan('yantr create <project-name>')}`);
+    p.log.info(`To initialize here, first run: ${chalk.cyan('npm init -y')}`);
+    p.outro(chalk.yellow('Initialization cancelled.'));
+    process.exit(1);
   }
 
-  // Step 2: Check if yantr.json already exists
+  // Check if yantr.json already exists
   const hasConfig = await configExists(cwd);
   
   if (hasConfig && !options.yes) {
@@ -191,18 +62,50 @@ export async function init(projectNameArg: string | undefined, options: InitOpti
     }
   }
 
-  // Step 3: Detect or ask for configuration
+  // Detect or select framework
+  let framework: Framework;
+  const detected = await detectFramework(cwd);
+  
+  if (detected) {
+    framework = detected;
+    p.log.info(`Detected framework: ${chalk.cyan(FRAMEWORK_INFO[framework].name)}`);
+  } else if (options.yes || options.framework) {
+    const validFrameworks = ['express', 'hono', 'fastify'];
+    if (options.framework && !validFrameworks.includes(options.framework)) {
+      p.log.error(`Invalid framework: ${options.framework}. Use: express, hono, or fastify`);
+      process.exit(1);
+    }
+    framework = (options.framework as Framework) || 'express';
+    p.log.info(`Using framework: ${chalk.cyan(FRAMEWORK_INFO[framework].name)}`);
+  } else {
+    const selectedFramework = await p.select({
+      message: 'Which framework are you using?',
+      initialValue: 'express' as Framework,
+      options: [
+        { value: 'express', label: 'Express.js - Fast, unopinionated, minimalist' },
+        { value: 'hono', label: 'Hono - Ultrafast, lightweight, multi-runtime' },
+        { value: 'fastify', label: 'Fastify - High performance web framework' },
+      ],
+    });
+
+    if (p.isCancel(selectedFramework)) {
+      p.outro(chalk.yellow('Initialization cancelled.'));
+      process.exit(0);
+    }
+
+    framework = selectedFramework as Framework;
+  }
+
+  // Collect configuration
   let projectName: string;
   let srcDir: string;
   let packageManager: PackageManager;
 
   if (options.yes) {
-    // Use defaults in non-interactive mode
     projectName = (await getProjectName(cwd)) || path.basename(cwd);
     srcDir = (await hasSrcDirectory(cwd)) ? './src' : '.';
     packageManager = (await detectPackageManager(cwd)) || 'npm';
   } else {
-    // Interactive prompts
     const detectedPm = await detectPackageManager(cwd);
     const detectedName = (await getProjectName(cwd)) || path.basename(cwd);
     const hasSrc = await hasSrcDirectory(cwd);
@@ -252,7 +155,7 @@ export async function init(projectNameArg: string | undefined, options: InitOpti
     packageManager = responses.packageManager as PackageManager;
   }
 
-  // Step 4: Create yantr.json
+  // Create yantr.json
   const spinner = p.spinner();
   spinner.start('Creating configuration...');
 
@@ -261,20 +164,15 @@ export async function init(projectNameArg: string | undefined, options: InitOpti
   
   spinner.stop('Created yantr.json');
 
-  // Step 5: Copy base templates from registry
+  // Copy base templates
   spinner.start('Setting up base templates...');
 
   const templatesDir = path.join(srcDir, 'lib', 'yantr');
   await ensureDir(path.join(cwd, templatesDir));
 
-  // Load templates from registry based on framework
   const cliDir = path.dirname(new URL(import.meta.url).pathname);
-  // From dist/index.js, go up to cli/ then into registry/templates
   const registryDir = path.resolve(cliDir, '../registry/templates');
-  
-  // Determine template paths based on framework
-  const frameworkDir = framework;  // 'express', 'hono', or 'fastify'
-  const baseTemplatesDir = path.join(registryDir, frameworkDir, 'base');
+  const baseTemplatesDir = path.join(registryDir, framework, 'base');
   
   try {
     const errorHandlerPath = path.join(baseTemplatesDir, 'error-handler.ts');
@@ -300,7 +198,7 @@ export async function init(projectNameArg: string | undefined, options: InitOpti
 
   spinner.stop('Base templates created');
 
-  // Step 6: Install dependencies
+  // Install dependencies
   spinner.start('Installing dependencies...');
 
   const deps = ['zod'];

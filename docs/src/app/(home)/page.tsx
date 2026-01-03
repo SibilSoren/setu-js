@@ -75,14 +75,14 @@ export default function HomePage() {
                 <div className="terminal-dot terminal-dot-green opacity-75"></div>
               </div>
               <div className="terminal-body bg-[#0f172a] p-8">
-                <div className="text-slate-500 font-mono italic mb-2">// Scaffold your backend instantly</div>
+                <div className="text-slate-500 font-mono italic mb-2">// Create your backend in seconds</div>
                 <div className="flex items-center gap-3">
                   <span className="text-[#4a9eff] font-bold">$</span>
-                  <span className="text-white font-mono text-base tracking-tight">npx yantr-js init</span>
+                  <span className="text-white font-mono text-base tracking-tight">npx yantr-js create my-api</span>
                 </div>
                 <div className="flex items-center gap-3 mt-1">
                   <span className="text-[#4a9eff] font-bold">$</span>
-                  <span className="text-white font-mono text-base tracking-tight">npx yantr-js add auth database</span>
+                  <span className="text-white font-mono text-base tracking-tight">cd my-api && yantr add auth</span>
                 </div>
               </div>
             </div>

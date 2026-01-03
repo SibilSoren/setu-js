@@ -1,5 +1,6 @@
 import { Command } from 'commander';
 import { init } from './commands/init.js';
+import { create } from './commands/create.js';
 import { add } from './commands/add.js';
 import { generate } from './commands/generate.js';
 
@@ -8,15 +9,24 @@ const program = new Command();
 program
   .name('yantr')
   .description('A Shadcn for Backend - Production-grade backend scaffolding CLI')
-  .version('0.1.0-beta.2');
+  .version('0.1.0-beta.5');
+
+program
+  .command('create')
+  .argument('<project-name>', 'Name of the project folder to create')
+  .description('Create a new project with YantrJS')
+  .option('-y, --yes', 'Use defaults for all prompts')
+  .option('-f, --framework <framework>', 'Framework: express, hono, fastify')
+  .option('-r, --runtime <runtime>', 'Runtime: node, bun')
+  .option('-t, --db-type <type>', 'Database type: postgres, mongodb, none')
+  .option('--orm <orm>', 'ORM: prisma, drizzle, mongoose')
+  .action(create);
 
 program
   .command('init')
-  .argument('[project-name]', 'Name of the project folder to create')
-  .description('Initialize YantrJS in your project')
+  .description('Initialize YantrJS in an existing project')
   .option('-y, --yes', 'Skip prompts and use defaults')
-  .option('-f, --framework <framework>', 'Framework to use (express, hono, fastify)')
-  .option('-r, --runtime <runtime>', 'Runtime to use (node, bun)')
+  .option('-f, --framework <framework>', 'Framework: express, hono, fastify')
   .action(init);
 
 program

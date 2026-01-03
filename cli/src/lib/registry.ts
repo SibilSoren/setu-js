@@ -4,14 +4,41 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 /**
+ * Schema for variant (used by database component)
+ */
+export const VariantSchema = z.object({
+  label: z.string(),
+  files: z.array(z.string()),
+  dependencies: z.array(z.string()).default([]),
+  devDependencies: z.array(z.string()).default([]),
+});
+
+/**
  * Schema for a single component in the registry
+ * Supports both framework-specific components and variant-based components
  */
 export const ComponentSchema = z.object({
   name: z.string(),
   description: z.string(),
-  files: z.array(z.string()),
-  dependencies: z.array(z.string()).default([]),
-  devDependencies: z.array(z.string()).default([]),
+  frameworkSpecific: z.boolean().optional(),
+  requiresSelection: z.boolean().optional(),
+  // files can be either an array (simple) or an object keyed by framework
+  files: z.union([
+    z.array(z.string()),
+    z.record(z.string(), z.array(z.string())),
+  ]).optional(),
+  // dependencies can be either an array or an object with "common" and/or framework keys
+  dependencies: z.union([
+    z.array(z.string()),
+    z.record(z.string(), z.array(z.string())),
+  ]).optional().default([]),
+  // devDependencies can be either an array or an object with "common" and/or framework keys  
+  devDependencies: z.union([
+    z.array(z.string()),
+    z.record(z.string(), z.array(z.string())),
+  ]).optional().default([]),
+  // variants for components like database that have multiple options
+  variants: z.record(z.string(), VariantSchema).optional(),
 });
 
 export type Component = z.infer<typeof ComponentSchema>;

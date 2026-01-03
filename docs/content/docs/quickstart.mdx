@@ -5,65 +5,54 @@ description: Get started with YantrJS in 3 minutes.
 
 Get from zero to a production-ready API in minutes. YantrJS supports **Express**, **Hono**, and **Fastify**.
 
-## 1. Installation
+## 1. Create a New Project
 
-Run YantrJS directly using `npx`:
+Run the interactive wizard:
 
 ```bash
-npx yantr-js init
+npx yantr-js create my-api
 ```
 
-Or install globally:
+The wizard will guide you through:
+1. **Runtime** — Node.js or Bun
+2. **Framework** — Express, Hono, or Fastify
+3. **Database** — PostgreSQL, MongoDB, or skip
+4. **ORM** — Prisma, Drizzle, or Mongoose
+5. **Components** — Auth, Logger, Security
+
+Or use defaults for a quick start:
 
 ```bash
-npm install -g yantr-js
-```
-
-## 2. Initialize your Project
-
-### Option A: Create a new project
-
-```bash
-yantr init my-api --framework express --yes
+npx yantr-js create my-api --yes
 cd my-api
 ```
 
-### Option B: Initialize in existing directory
+## 2. (Alternative) Initialize in Existing Project
+
+If you already have a Node.js project:
 
 ```bash
-yantr init
+cd my-existing-project
+npx yantr-js init
 ```
 
 YantrJS will:
-1. **Detect or create** your `package.json`
-2. **Ask which framework** you want (Express, Hono, or Fastify)
-3. **Ask which runtime** you prefer (Node.js or Bun)
-4. **Create** `yantr.json` configuration
-5. **Install** framework-specific base templates
+1. **Detect** your framework from `package.json`
+2. **Create** `yantr.json` configuration
+3. **Install** framework-specific base templates
 
-## 3. Add a Database
+## 3. Add Components
 
-Set up your database with ORM of choice:
+Add production-ready features as needed:
 
 ```bash
-yantr add database
+yantr add database  # Set up PostgreSQL/MongoDB with ORM
+yantr add auth      # JWT authentication
+yantr add logger    # Pino structured logging
+yantr add security  # Rate limiting + Helmet headers
 ```
 
-Select from:
-- **PostgreSQL** with Prisma or Drizzle
-- **MongoDB** with Mongoose
-
-## 4. Add Components
-
-Add production-ready features:
-
-```bash
-yantr add auth     # JWT authentication
-yantr add logger   # Pino structured logging
-yantr add security # Rate limiting + Helmet headers
-```
-
-## 5. Generate Routes
+## 4. Generate Routes
 
 Scaffold a new API resource:
 
@@ -76,7 +65,7 @@ Creates:
 - `controllers/users.controller.ts`
 - `services/users.service.ts`
 
-## 6. Wire it up
+## 5. Wire it up
 
 ### Express
 

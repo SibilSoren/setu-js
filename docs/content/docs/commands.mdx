@@ -3,54 +3,111 @@ title: CLI Commands
 description: Complete reference for all YantrJS CLI commands.
 ---
 
-YantrJS provides three primary commands to manage your backend project.
+YantrJS provides four primary commands to manage your backend project.
 
 ---
 
-## `yantr init`
+## `yantr create`
 
-Initializes YantrJS in a new or existing project.
+Creates a new project with a full interactive wizard.
 
 ### Usage
 
 ```bash
-yantr init [project-name] [options]
+yantr create <project-name> [options]
 ```
 
 ### Arguments
 
 | Argument | Description |
 |----------|-------------|
-| `project-name` | Optional. Creates a new folder with this name |
+| `project-name` | Required. Name of the project folder to create |
 
 ### Options
 
 | Flag | Description |
 |------|-------------|
 | `-y, --yes` | Use defaults for all prompts |
-| `-f, --framework <framework>` | Framework to use (express, hono, fastify) |
-| `-r, --runtime <runtime>` | Runtime to use (node, bun) |
+| `-f, --framework <framework>` | Framework: express, hono, fastify |
+| `-r, --runtime <runtime>` | Runtime: node, bun |
+| `-t, --db-type <type>` | Database type: postgres, mongodb, none |
+| `--orm <orm>` | ORM: prisma, drizzle, mongoose |
+
+### Interactive Wizard
+
+When run without `--yes`, the wizard guides you through:
+
+1. **Runtime** — Node.js or Bun
+2. **Framework** — Express, Hono, or Fastify
+3. **Database** — PostgreSQL, MongoDB, or skip
+4. **ORM** — Prisma, Drizzle, or Mongoose (based on database)
+5. **Components** — Auth, Logger, Security (multi-select)
+6. **Package Manager** — npm, pnpm, yarn, or bun
 
 ### Examples
 
 ```bash
-# Create new project in my-api folder
-yantr init my-api --framework express --yes
+# Full interactive wizard
+yantr create my-api
 
-# Initialize in current directory (interactive)
-yantr init
+# Quick start with defaults (Express + Node.js)
+yantr create my-api --yes
 
-# Initialize with Hono and Bun runtime
-yantr init my-hono-app --framework hono --runtime bun --yes
+# Create with specific stack
+yantr create my-api --framework hono --runtime bun --db-type postgres --orm prisma
+
+# Create with Express and skip database
+yantr create my-api --framework express --db-type none --yes
 ```
 
 ### What it does
 
-1. **Creates project folder** (if project-name provided)
-2. **Detects or creates** `package.json` with your chosen framework
+1. **Creates project folder** with your chosen name
+2. **Creates** `package.json` with framework and runtime settings
 3. **Creates** `yantr.json` configuration
-4. **Installs** framework-specific base templates (error-handler, zod-middleware)
-5. **Installs** `zod` for validation
+4. **Installs** base templates (error-handler, zod-middleware)
+5. **Optionally sets up** database with your chosen ORM
+6. **Optionally adds** selected components (auth, logger, security)
+7. **Installs** all dependencies at once
+
+---
+
+## `yantr init`
+
+Initializes YantrJS in an **existing** Node.js project.
+
+### Usage
+
+```bash
+yantr init [options]
+```
+
+### Options
+
+| Flag | Description |
+|------|-------------|
+| `-y, --yes` | Use defaults for all prompts |
+| `-f, --framework <framework>` | Framework: express, hono, fastify |
+
+### Examples
+
+```bash
+# Initialize in current project (interactive)
+yantr init
+
+# Initialize with defaults
+yantr init --yes
+
+# Initialize with specific framework
+yantr init --framework hono
+```
+
+### What it does
+
+1. **Detects** your framework from `package.json` (or asks)
+2. **Creates** `yantr.json` configuration
+3. **Installs** framework-specific base templates
+4. **Installs** `zod` for validation
 
 ### Framework Detection
 
@@ -61,6 +118,9 @@ If your `package.json` already has a framework installed, YantrJS will automatic
 # Has hono in dependencies → detects Hono  
 # Has fastify in dependencies → detects Fastify
 ```
+
+> [!NOTE]
+> If no `package.json` exists, `yantr init` will prompt you to use `yantr create` instead.
 
 ---
 
