@@ -12,7 +12,8 @@ program
 
 program
   .command('init')
-  .description('Initialize Setu in your project')
+  .argument('[project-name]', 'Name of the project folder to create')
+  .description('Initialize YantrJS in your project')
   .option('-y, --yes', 'Skip prompts and use defaults')
   .option('-f, --framework <framework>', 'Framework to use (express, hono, fastify)')
   .option('-r, --runtime <runtime>', 'Runtime to use (node, bun)')

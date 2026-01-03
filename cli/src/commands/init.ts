@@ -33,18 +33,39 @@ interface InitOptions {
   runtime?: string;
 }
 
-export async function init(options: InitOptions) {
+export async function init(projectNameArg: string | undefined, options: InitOptions) {
   console.clear();
   p.intro(chalk.bgCyan.black(' 🪛 yantr init '));
 
-  const cwd = process.cwd();
+  let cwd = process.cwd();
+  
+  // If project name is provided, create directory and use it
+  if (projectNameArg) {
+    const targetDir = path.resolve(cwd, projectNameArg);
+    
+    // Check if directory already exists
+    if (await fs.pathExists(targetDir)) {
+      const isEmpty = (await fs.readdir(targetDir)).length === 0;
+      if (!isEmpty) {
+        p.log.error(`Directory "${projectNameArg}" already exists and is not empty.`);
+        process.exit(1);
+      }
+    } else {
+      await ensureDir(targetDir);
+      p.log.info(`Created directory: ${chalk.cyan(projectNameArg)}`);
+    }
+    
+    cwd = targetDir;
+  }
 
   // Step 1: Check if this is a Node.js project and detect/select framework
   let isNode = await isNodeProject(cwd);
   let framework: Framework;
   
   if (!isNode) {
-    p.log.warning('No package.json found in current directory.');
+    if (!projectNameArg) {
+      p.log.warning('No package.json found in current directory.');
+    }
     
     // Ask for framework first when creating new project
     if (options.yes || options.framework) {
@@ -57,13 +78,16 @@ export async function init(options: InitOptions) {
       framework = (options.framework as Framework) || 'express';
       const runtime = (options.runtime as 'node' | 'bun') || 'node';
       const spinner = p.spinner();
+      const folderName = projectNameArg || path.basename(cwd);
       spinner.start(`Creating package.json with ${FRAMEWORK_INFO[framework].name} for ${runtime}...`);
-      await createPackageJson(cwd, path.basename(cwd), framework, runtime);
+      await createPackageJson(cwd, folderName, framework, runtime);
       spinner.stop('Created package.json');
       isNode = true;
     } else {
       const shouldInit = await p.confirm({
-        message: 'Would you like to initialize a new Node.js project here?',
+        message: projectNameArg 
+          ? `Initialize a new Node.js project in "${projectNameArg}"?`
+          : 'Would you like to initialize a new Node.js project here?',
         initialValue: true,
       });
 
@@ -109,8 +133,9 @@ export async function init(options: InitOptions) {
 
       // Create package.json with framework dependency
       const spinner = p.spinner();
+      const folderName = projectNameArg || path.basename(cwd);
       spinner.start(`Creating package.json with ${FRAMEWORK_INFO[framework].name} for ${runtime}...`);
-      await createPackageJson(cwd, path.basename(cwd), framework, runtime);
+      await createPackageJson(cwd, folderName, framework, runtime);
       spinner.stop('Created package.json');
       isNode = true;
     }

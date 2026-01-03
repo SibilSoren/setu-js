@@ -111,14 +111,25 @@ export default function BuilderPage() {
 
   const generateCommand = () => {
     const lines: string[] = [];
+    const hasCustomName = projectName && projectName !== 'my-yantr-app';
     
     const initParts = ['npx yantr-js init'];
+    // Add project name if it's not the default
+    if (hasCustomName) {
+      initParts.push(projectName);
+    }
     initParts.push(`--framework ${framework}`);
     if (runtime === 'bun') {
       initParts.push('--runtime bun');
     }
     initParts.push('--yes');
     lines.push(initParts.join(' '));
+    
+    // Add cd command if project name is specified and there are more commands
+    const hasMoreCommands = database !== 'none' || components.size > 0;
+    if (hasCustomName && hasMoreCommands) {
+      lines.push(`cd ${projectName}`);
+    }
     
     if (database !== 'none') {
       lines.push(`npx yantr-js add database --type ${database} --orm ${orm}`);
@@ -337,11 +348,6 @@ export default function BuilderPage() {
 
             {/* Command Preview Card */}
             <div className="bg-fd-card rounded-2xl border border-fd-border shadow-2xl shadow-[#4a9eff]/10 overflow-hidden group relative">
-              <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <div className="bg-[#4a9eff] rounded-lg p-1 w-8 h-8 flex items-center justify-center">
-                  <Image src="/logo.png" alt="YantrJS" width={16} height={16} className="brightness-0 invert" />
-                </div>
-              </div>
               <div className="bg-fd-muted px-5 py-3 border-b border-fd-border flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/50" />
