@@ -10,6 +10,9 @@
   "packageManager": "npm",
   "installedComponents": [
     "base",
-    "database"
+    "database",
+    "auth",
+    "logger",
+    "security"
   ]
 }
